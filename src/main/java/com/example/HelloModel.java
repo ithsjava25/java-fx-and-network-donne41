@@ -1,5 +1,7 @@
 package com.example;
 
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
@@ -9,9 +11,11 @@ import javafx.beans.property.StringProperty;
 public class HelloModel {
 
     private StringProperty dateTimeProperty;
+    private DoubleProperty rotationProperty;
 
     public HelloModel(){
         dateTimeProperty = new SimpleStringProperty();
+        rotationProperty = new SimpleDoubleProperty();
     }
     public void setDateTime(String dateTime){
         dateTimeProperty.set(dateTime);
@@ -21,6 +25,12 @@ public class HelloModel {
     }
     public StringProperty dateTimeProperty(){
         return dateTimeProperty;
+    }
+    public void setRotation(double degrees){
+        rotationProperty.set(degrees);
+    }
+    public DoubleProperty rotationProperty(){
+        return rotationProperty;
     }
 
 

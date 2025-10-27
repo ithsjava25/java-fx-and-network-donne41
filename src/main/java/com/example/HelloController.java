@@ -6,11 +6,13 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Random;
 
 /**
  * Controller layer: mediates between the view (FXML) and the model.
@@ -18,12 +20,13 @@ import java.time.format.DateTimeFormatter;
 public class HelloController {
 
     private final HelloModel model = new HelloModel();
-
+    Random random = new Random();
     @FXML
     private Label messageLabel;
     public Label dateAndTimeLable;
     public Button upDateButton;
     public VBox smallVboxContent;
+    public BorderPane allContentWindow;
     private double rotation = 0;
 
     private Timeline timeline;
@@ -35,6 +38,7 @@ public class HelloController {
     @FXML
     private void initialize() {
         dateAndTimeLable.textProperty().bind(model.dateTimeProperty());
+        allContentWindow.rotateProperty().bind(model.rotationProperty());
         //A[ dateAndTimeLable.textProperty() ].bind(B[ model.dateTimeProperty() ])
         if (messageLabel != null) {
             messageLabel.setText(model.getGreeting());
@@ -43,7 +47,7 @@ public class HelloController {
 //            dateAndTimeLable.setText(LocalDateTime.now()
 //                    .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
 //        }
-        timeline = new Timeline(new KeyFrame(Duration.seconds(2), _ ->{
+        timeline = new Timeline(new KeyFrame(Duration.seconds(1), _ ->{
             model.setDateTime(LocalDateTime.now()
                     .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
         }));
@@ -52,9 +56,9 @@ public class HelloController {
     }
 
     public void updateButtonAction(ActionEvent actionEvent) {
-        model.setDateTime(LocalDateTime.now()
-                .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
-        rotation += 27;
-        smallVboxContent.setRotate(rotation);
+        model.setRotation(0.0);
+    }
+    public void chaosButtonAction(ActionEvent actionEvent) {
+        model.setRotation(random.nextDouble(1,361));
     }
 }

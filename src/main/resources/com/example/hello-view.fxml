@@ -1,26 +1,47 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<StackPane xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.HelloController">
+<StackPane style="-fx-background-color: #2aa530; -fx-background-radius: 20;" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.HelloController">
     <children>
-      <BorderPane prefHeight="364.0" prefWidth="357.0">
+      <BorderPane fx:id="allContentWindow">
          <center>
               <VBox fx:id="smallVboxContent" alignment="center" BorderPane.alignment="CENTER">
-                  <Label fx:id="messageLabel" text="Hello, JavaFX!" textFill="#6fa32a">
+                  <Label fx:id="messageLabel" text="Hello, JavaFX!" textFill="#3523c4">
                   <font>
                      <Font size="16.0" />
                   </font>
                </Label>
                   <Label fx:id="dateAndTimeLable" text="" textAlignment="CENTER" />
-                  <Button fx:id="upDateButton" onAction="#updateButtonAction" text="Update" />
+                  <Button fx:id="upDateButton" onAction="#updateButtonAction" text="Reset" />
                   <Label fx:id="secoundDateTime" text="${controller.model.dateAndTimeLable}" />
                   <CheckBox fx:id="toggleTime" text="leave more" />
                   <TextField fx:id="fieldOfText" disable="${!toggleTime.selected}" />
               </VBox>
          </center>
+         <left>
+            <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER" />
+         </left>
+         <bottom>
+            <HBox alignment="CENTER" spacing="10">
+                <Button fx:id="chaosButton" alignment="CENTER" onAction="#chaosButtonAction" text="RandomRotate" />
+               <BorderPane.margin>
+                  <Insets />
+               </BorderPane.margin>
+               <padding>
+                  <Insets bottom="5.0" top="5.0" />
+               </padding>
+            </HBox>
+         </bottom>
+         <top>
+            <Pane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
+         </top>
+         <right>
+            <Pane prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER" />
+         </right>
       </BorderPane>
     </children>
 </StackPane>
