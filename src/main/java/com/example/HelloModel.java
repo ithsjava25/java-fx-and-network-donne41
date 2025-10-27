@@ -1,9 +1,29 @@
 package com.example;
 
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+
 /**
  * Model layer: encapsulates application data and business logic.
  */
 public class HelloModel {
+
+    private StringProperty dateTimeProperty;
+
+    public HelloModel(){
+        dateTimeProperty = new SimpleStringProperty();
+    }
+    public void setDateTime(String dateTime){
+        dateTimeProperty.set(dateTime);
+    }
+    public String getDateTime(){
+        return dateTimeProperty.get();
+    }
+    public StringProperty dateTimeProperty(){
+        return dateTimeProperty;
+    }
+
+
     /**
      * Returns a greeting based on the current Java and JavaFX versions.
      */
