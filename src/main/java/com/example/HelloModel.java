@@ -8,16 +8,19 @@ import javafx.scene.image.Image;
  */
 public class HelloModel {
 
-    private StringProperty dateTimeProperty;
-    private DoubleProperty rotationProperty;
-    private ObjectProperty<Image> imageProperty;
+
+    Image trollFace;
+
+    StringProperty dateTimeProperty;
+    DoubleProperty rotationProperty;
+    ObjectProperty<Image> VboxLeftPic;
 
     public HelloModel(){
         dateTimeProperty = new SimpleStringProperty();
         rotationProperty = new SimpleDoubleProperty();
-        imageProperty = new SimpleObjectProperty<>();
+        trollFace = new Image(getClass().getResource("/troll-face.png").toExternalForm());
 
-        setImageProperty(new Image("/troll-face.png"));
+        VboxLeftPic = new SimpleObjectProperty<Image>(trollFace);
     }
     public void setDateTime(String dateTime){
         dateTimeProperty.set(dateTime);
@@ -38,16 +41,16 @@ public class HelloModel {
         return rotationProperty;
     }
 
-    public Image getImageProperty() {
-        return imageProperty.get();
+    public Image getVboxLeftPic() {
+        return VboxLeftPic.get();
     }
 
-    public ObjectProperty<Image> imagePropertyProperty() {
-        return imageProperty;
+    public ObjectProperty<Image> vboxLeftPicProperty() {
+        return VboxLeftPic;
     }
 
-    public void setImageProperty(Image imageProperty) {
-        this.imageProperty.set(imageProperty);
+    public void setVboxLeftPic(Image vboxLeftPic) {
+        this.VboxLeftPic.set(vboxLeftPic);
     }
 
     /**

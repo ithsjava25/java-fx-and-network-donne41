@@ -22,6 +22,7 @@ import java.util.Random;
 public class HelloController {
 
     private final HelloModel model = new HelloModel();
+    public VBox pictureVBox;
     Random random = new Random();
     @FXML
     private Label messageLabel;
