@@ -30,6 +30,7 @@
          <bottom>
             <HBox alignment="CENTER" spacing="10">
                 <Button fx:id="chaosButton" alignment="CENTER" onAction="#chaosButtonAction" text="RandomRotate" />
+                <Button fx:id="backFlipButton" alignment="CENTER_RIGHT" onAction="#doAFlip" text="Do BackFlip!" />
                <BorderPane.margin>
                   <Insets />
                </BorderPane.margin>

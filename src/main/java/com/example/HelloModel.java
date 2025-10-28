@@ -1,9 +1,7 @@
 package com.example;
 
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.*;
+import javafx.scene.image.Image;
 
 /**
  * Model layer: encapsulates application data and business logic.
@@ -12,10 +10,14 @@ public class HelloModel {
 
     private StringProperty dateTimeProperty;
     private DoubleProperty rotationProperty;
+    private ObjectProperty<Image> imageProperty;
 
     public HelloModel(){
         dateTimeProperty = new SimpleStringProperty();
         rotationProperty = new SimpleDoubleProperty();
+        imageProperty = new SimpleObjectProperty<>();
+
+        setImageProperty(new Image("/troll-face.png"));
     }
     public void setDateTime(String dateTime){
         dateTimeProperty.set(dateTime);
@@ -36,6 +38,17 @@ public class HelloModel {
         return rotationProperty;
     }
 
+    public Image getImageProperty() {
+        return imageProperty.get();
+    }
+
+    public ObjectProperty<Image> imagePropertyProperty() {
+        return imageProperty;
+    }
+
+    public void setImageProperty(Image imageProperty) {
+        this.imageProperty.set(imageProperty);
+    }
 
     /**
      * Returns a greeting based on the current Java and JavaFX versions.

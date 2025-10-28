@@ -27,6 +27,7 @@ public class HelloController {
     private Label messageLabel;
     public Label dateAndTimeLable;
     public Button upDateButton;
+    public Button backFlipButton;
     public VBox smallVboxContent;
     public BorderPane allContentWindow;
     private double rotation = 0;
@@ -43,12 +44,13 @@ public class HelloController {
 
 
 
+
     @FXML
     private void initialize() {
         dateAndTimeLable.textProperty().bind(model.dateTimeProperty());
         allContentWindow.rotateProperty().bind(model.rotationProperty());
 
-        Image img = new Image(getClass().getResource("/java/resources/troll-face.png").getFile());
+
         //A[ dateAndTimeLable.textProperty() ].bind(B[ model.dateTimeProperty() ])
 
 
@@ -71,10 +73,12 @@ public class HelloController {
         rotateTime = new Timeline(new KeyFrame(Duration.millis(rotateSpeed), event -> {
             model.setRotation(model.getRotation()+rotationDegrees);
         }));
-        rotateTime.setCycleCount(360/rotateSpeed);
+        rotateTime.setCycleCount(360/rotationDegrees);
         rotateTime.play();
     }
-
+    public void doAFlip(ActionEvent actionEvent) {
+        backFlip();
+    }
     public void updateButtonAction(ActionEvent actionEvent) {
         model.setRotation(0.0);
     }
