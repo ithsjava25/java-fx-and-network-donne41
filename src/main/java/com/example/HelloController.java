@@ -10,6 +10,11 @@ public class HelloController {
 
     private final HelloModel model = new HelloModel();
 
+
+    public HelloModel getModel(){
+        return model;
+    }
+
     @FXML
     private Label messageLabel;
 
@@ -18,5 +23,7 @@ public class HelloController {
         if (messageLabel != null) {
             messageLabel.setText(model.getGreeting());
         }
+
+
     }
 }

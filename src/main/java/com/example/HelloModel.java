@@ -15,6 +15,14 @@ public class HelloModel {
 
     public HelloModel(){
         noSmash = new Image(getClass().getResource("/lantern.png").toExternalForm());
+        smash1 = new Image(getClass().getResource("/lantern1.png").toExternalForm());
+        smash2 = new Image(getClass().getResource("/lantern2.png").toExternalForm());
+        smash3 = new Image(getClass().getResource("/lantern3.png").toExternalForm());
+        smash4 = new Image(getClass().getResource("/lantern4.png").toExternalForm());
+    }
+
+    public Image getNoSmash(){
+        return noSmash;
     }
     /**
      * Returns a greeting based on the current Java and JavaFX versions.
