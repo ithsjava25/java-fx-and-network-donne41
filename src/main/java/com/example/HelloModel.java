@@ -29,6 +29,9 @@ public class HelloModel {
     public void setRotation(double degrees){
         rotationProperty.set(degrees);
     }
+    public double getRotation(){
+        return rotationProperty.get();
+    }
     public DoubleProperty rotationProperty(){
         return rotationProperty;
     }

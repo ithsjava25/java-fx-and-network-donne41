@@ -33,6 +33,9 @@ public class HelloController {
     public ImageView pictureView;
 
     private Timeline timeline;
+    private Timeline rotateTime;
+    public int rotateSpeed = 20;
+    public int rotationDegrees = 5;
 
     public HelloModel getModel(){
         return model;
@@ -42,6 +45,7 @@ public class HelloController {
     private void initialize() {
         dateAndTimeLable.textProperty().bind(model.dateTimeProperty());
         allContentWindow.rotateProperty().bind(model.rotationProperty());
+
         Image img = new Image(getClass().getResource("/java/resources/troll-face.png").getFile());
         //A[ dateAndTimeLable.textProperty() ].bind(B[ model.dateTimeProperty() ])
 
@@ -60,6 +64,13 @@ public class HelloController {
         }));
         timeline.setCycleCount(Timeline.INDEFINITE);
         timeline.play();
+    }
+    public void backFlip(){
+        rotateTime = new Timeline(new KeyFrame(Duration.millis(rotateSpeed), event -> {
+            model.setRotation(model.getRotation()+rotationDegrees);
+        }));
+        rotateTime.setCycleCount(360/rotateSpeed);
+        rotateTime.play();
     }
 
     public void updateButtonAction(ActionEvent actionEvent) {
