@@ -6,6 +6,8 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
@@ -28,6 +30,7 @@ public class HelloController {
     public VBox smallVboxContent;
     public BorderPane allContentWindow;
     private double rotation = 0;
+    public ImageView pictureView;
 
     private Timeline timeline;
 
@@ -39,7 +42,11 @@ public class HelloController {
     private void initialize() {
         dateAndTimeLable.textProperty().bind(model.dateTimeProperty());
         allContentWindow.rotateProperty().bind(model.rotationProperty());
+        Image img = new Image(getClass().getResource("/java/resources/troll-face.png").getFile());
         //A[ dateAndTimeLable.textProperty() ].bind(B[ model.dateTimeProperty() ])
+
+
+
         if (messageLabel != null) {
             messageLabel.setText(model.getGreeting());
         }
