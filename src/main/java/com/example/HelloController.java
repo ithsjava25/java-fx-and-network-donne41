@@ -41,6 +41,8 @@ public class HelloController {
         return model;
     }
 
+
+
     @FXML
     private void initialize() {
         dateAndTimeLable.textProperty().bind(model.dateTimeProperty());
