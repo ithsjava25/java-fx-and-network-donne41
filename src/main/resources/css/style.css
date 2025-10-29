@@ -26,9 +26,11 @@
 
 }
 
-.scroll-pane {
-    -fx-opacity: 0.7;
-    -fx-background-color: rgba(0,0,0,0.2);
+.scroll-pane{
+    -fx-background-color: transparent;
+}
+.viewport{
+    -fx-background-color: transparent;
 }
 /*#messageArea{*/
 /*    -fx-background-radius: 10px;*/
