@@ -1,5 +1,6 @@
 package com.example;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 
@@ -18,5 +19,9 @@ public class HelloController {
         if (messageLabel != null) {
             messageLabel.setText(model.getGreeting());
         }
+    }
+
+    public void sendButtonCliked(ActionEvent actionEvent) {
+
     }
 }

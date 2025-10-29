@@ -1,0 +1,43 @@
+
+.root {
+    -fx-alignment: "center";
+    -fx-background-image: url("/backgroundTree.jpg");
+    -fx-background-size: cover;
+    -fx-background-color: #616060;
+}
+VBox {
+    -fx-alignment: "center";
+}
+.label{
+    -fx-background-color: #7db8df;
+    -fx-background-radius: 5px;
+    -fx-opacity: 0.65;
+    -fx-padding: 5px;
+    -fx-font-size: 20px;
+    -fx-alignment: left;
+}
+#topBoxInfo{
+    -fx-padding: 10px;
+    -fx-alignment: left;
+}
+#messages{
+
+}
+.button{
+
+}
+
+#outgoingMessage {
+    -fx-pref-height: 50px;
+    -fx-font-size: 10px;
+    -fx-background-color: #bdbdbd;
+    -fx-background-radius: 10px;
+}
+.HBox{
+    -fx-padding: 10px;
+}
+#sendButton {
+    -fx-pref-height: 50px;
+    -fx-pref-width: 50px;
+    -fx-alignment: center;
+}
