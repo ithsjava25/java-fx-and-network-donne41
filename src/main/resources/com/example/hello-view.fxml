@@ -3,15 +3,18 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
+<?import javafx.scene.image.ImageView?>
 <BorderPane stylesheets="@../../css/style.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.HelloController">
     <top>
         <VBox fx:id="topBoxInfo">
-        <Label fx:id="connectionStatus" text="Current connection status" />
-        <Label fx:id="currentChatMemeber" text="Current reciver" />
+        <Label fx:id="connectionStatus" text="Current connection status" prefWidth="Infinity" />
+        <Label fx:id="currentChatMemeber" text="Current reciver" prefWidth="Infinity" />
         </VBox>
     </top>
     <center>
-        <VBox fx:id="messages" spacing="8" />
+        <ScrollPane fx:id="messageArea">
+                <VBox fx:id="messageList" />
+        </ScrollPane>
     </center>
     <bottom>
         <HBox>
