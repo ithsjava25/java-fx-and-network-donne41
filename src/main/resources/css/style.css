@@ -26,15 +26,19 @@
 
 }
 
-#messageArea{
-    -fx-opacity: 0.8;
-    -fx-background-radius: 10px;
+.scroll-pane {
+    -fx-opacity: 0.7;
+    -fx-background-color: rgba(0,0,0,0.2);
 }
+/*#messageArea{*/
+/*    -fx-background-radius: 10px;*/
+/*    -fx-background-color: transparent;*/
+/*}*/
 
 #singleMessage {
-    -fx-background-color: white;
+    -fx-background-color: rgba(189, 189, 189, 0.6);
     -fx-background-radius: 5px;
-    -fx-opacity: 0.8;
+
 }
 
 #outgoingMessage {

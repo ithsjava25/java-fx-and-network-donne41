@@ -18,7 +18,7 @@
     </center>
     <bottom>
         <HBox>
-            <TextField fx:id="outgoingMessage" text="Skicka ett meddelande" HBox.hgrow="SOMETIMES" />
+            <TextField fx:id="outgoingMessage" text="Skicka ett meddelande" onAction="#sendButtonCliked" HBox.hgrow="SOMETIMES" />
             <Button fx:id="sendButton" onAction="#sendButtonCliked" text="send" />
         </HBox>
     </bottom>
