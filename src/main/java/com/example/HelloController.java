@@ -6,6 +6,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 
@@ -18,9 +19,10 @@ public class HelloController {
 
     @FXML
     private Label messageLabel;
-    private Label messageSent;
-
-
+    @FXML
+    private HBox messageSent;
+    @FXML
+    private HBox messageRecived;
     @FXML
     private ImageView backgroundImage;
     @FXML
@@ -37,6 +39,12 @@ public class HelloController {
     }
 
     public void sendButtonCliked(ActionEvent actionEvent) {
+        Label message = new Label(outgoingMessage.getText());
+        messageRecived.getChildren().add(message);
+        messageList.getChildren().add(messageRecived);
+        outgoingMessage.clear();
+    }
+    public void enterButtonSend(ActionEvent actionEvent) {
         Label message = new Label(outgoingMessage.getText());
         messageList.getChildren().add(message);
         outgoingMessage.clear();

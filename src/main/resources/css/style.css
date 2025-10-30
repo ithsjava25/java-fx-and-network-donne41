@@ -36,7 +36,12 @@
 /*    -fx-background-radius: 10px;*/
 /*    -fx-background-color: transparent;*/
 /*}*/
-
+#messageRecived{
+    -fx-alignment: left;
+}
+#messageSent{
+    -fx-alignment: right;
+}
 #singleMessage {
     -fx-background-color: rgba(189, 189, 189, 0.6);
     -fx-background-radius: 5px;

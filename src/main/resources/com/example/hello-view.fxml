@@ -4,22 +4,27 @@
 <?import javafx.scene.layout.*?>
 
 <?import javafx.scene.image.ImageView?>
-<BorderPane stylesheets="@../../css/style.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.HelloController">
+<BorderPane stylesheets="@../../css/style.css" xmlns="http://javafx.com/javafx/17.0.12"
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.HelloController">
     <top>
         <VBox fx:id="topBoxInfo">
-        <Label fx:id="connectionStatus" text="Current connection status" prefWidth="Infinity" />
-        <Label fx:id="currentChatMemeber" text="Current reciver" prefWidth="Infinity" />
+            <Label fx:id="connectionStatus" text="Current connection status" prefWidth="Infinity"/>
+            <Label fx:id="currentChatMemeber" text="Current reciver" prefWidth="Infinity"/>
         </VBox>
     </top>
     <center>
         <ScrollPane fx:id="messageArea">
-                <VBox fx:id="messageList" />
+            <VBox fx:id="messageList">
+                <HBox fx:id="messageRecived"/>
+                <HBox fx:id="messageSent"/>
+            </VBox>
         </ScrollPane>
     </center>
     <bottom>
         <HBox>
-            <TextField fx:id="outgoingMessage" text="Skicka ett meddelande" onAction="#sendButtonCliked" HBox.hgrow="SOMETIMES" />
-            <Button fx:id="sendButton" onAction="#sendButtonCliked" text="send" />
+            <TextField fx:id="outgoingMessage" text="Skicka ett meddelande" onAction="#sendButtonCliked"
+                       HBox.hgrow="SOMETIMES"/>
+            <Button fx:id="sendButton" onAction="#sendButtonCliked" text="send"/>
         </HBox>
     </bottom>
 </BorderPane>
