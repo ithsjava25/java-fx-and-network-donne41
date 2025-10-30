@@ -2,6 +2,7 @@ package com.example;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
@@ -32,7 +33,7 @@ public class HelloController {
 
     @FXML
     private void initialize() {
-
+        model.getScrollPaneProp().vvalueProperty().bind(model.messageListPropHight());
         if (messageLabel != null) {
             messageLabel.setText(model.getGreeting());
         }
@@ -40,13 +41,17 @@ public class HelloController {
 
     public void sendButtonCliked(ActionEvent actionEvent) {
         Label message = new Label(outgoingMessage.getText());
-        messageRecived.getChildren().add(message);
-        messageList.getChildren().add(messageRecived);
+        HBox container = new HBox(message);
+        container.setAlignment(Pos.TOP_LEFT);
+        messageList.getChildren().add(container);
         outgoingMessage.clear();
     }
     public void enterButtonSend(ActionEvent actionEvent) {
         Label message = new Label(outgoingMessage.getText());
-        messageList.getChildren().add(message);
+        HBox container = new HBox(message);
+        container.setAlignment(Pos.TOP_RIGHT);
+        container.setFillHeight(false);
+        messageList.getChildren().add(container);
         outgoingMessage.clear();
     }
 }

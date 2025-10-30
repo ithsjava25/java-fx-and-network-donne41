@@ -13,14 +13,11 @@
     -fx-background-radius: 5px;
     -fx-opacity: 0.8;
     -fx-font-size: 20px;
-    -fx-alignment: left;
+    -fx-alignment: center_left;
 }
 #topBoxInfo{
     -fx-padding: 10px;
-    -fx-alignment: left;
-}
-#messages{
-
+    -fx-alignment: center_left;
 }
 .button{
 
@@ -32,20 +29,14 @@
 .viewport{
     -fx-background-color: transparent;
 }
-/*#messageArea{*/
-/*    -fx-background-radius: 10px;*/
-/*    -fx-background-color: transparent;*/
-/*}*/
+#messageList{
+    -fx-tile-alignment: center;
+}
 #messageRecived{
-    -fx-alignment: left;
+    -fx-alignment: CENTER_LEFT;
 }
 #messageSent{
-    -fx-alignment: right;
-}
-#singleMessage {
-    -fx-background-color: rgba(189, 189, 189, 0.6);
-    -fx-background-radius: 5px;
-
+    -fx-alignment: CENTER_RIGHT;
 }
 
 #outgoingMessage {
@@ -56,7 +47,7 @@
     -fx-opacity: 0.8;
 }
 .HBox{
-    -fx-padding: 10px;
+    -fx-padding: 5px;
 }
 #sendButton {
     -fx-pref-height: 50px;
