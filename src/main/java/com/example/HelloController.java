@@ -34,7 +34,7 @@ public class HelloController {
     @FXML
     private VBox messageList;
     @FXML
-    private ScrollPane messageScroll;
+    private ScrollPane messageArea;
     @FXML
     private TextField outgoingMessage;
 
@@ -43,24 +43,23 @@ public class HelloController {
         if (messageLabel != null) {
             messageLabel.setText(model.getGreeting());
         }
+
         connectListerners();
     }
 
 
     private void connectListerners() {
+        messageArea.vvalueProperty().bind(messageList.heightProperty());
+
         model.getMessages().addListener((ListChangeListener.Change<? extends Message> c) -> {
-            while (c.next()) {
-                if (c.wasAdded()) {
-                    for (Message message : c.getAddedSubList()) {
-                        addMessageToView(message);
-                    }
-                }
-            }
-        })
-    ;}
-    public void addMessageToView(Message message) {
-        Label messageLabel = new Label(message.getMessage());
+            Platform.runLater(() -> {
+                outgoingMessage.requestFocus();
+            });
+        });
     }
+//    public void addMessageToView(Message message) {
+//        Label messageLabel = new Label(message.getMessage());
+//    }
 
 
     /**
@@ -70,12 +69,13 @@ public class HelloController {
      */
     public void sendButtonCliked(ActionEvent actionEvent) {
         String text = outgoingMessage.getText().trim();
-        if(text.isEmpty()) {
+        if (text.isEmpty()) {
             outgoingMessage.clear();
             return;
         }
         makeNewIncomingMsg(text);
     }
+
     /**
      * Simulate sent messenges. Suppost to be on the right side.
      *
@@ -83,7 +83,7 @@ public class HelloController {
      */
     public void enterButtonSend(ActionEvent actionEvent) {
         String text = outgoingMessage.getText().trim();
-        if(text.isEmpty()) {
+        if (text.isEmpty()) {
             outgoingMessage.clear();
             return;
         }
@@ -107,6 +107,7 @@ public class HelloController {
         messageList.getChildren().add(msgContainer);
         outgoingMessage.clear();
     }
+
     private void makeNewSentMsg(String text) {
         model.addMessage(text, "SentMsg");
         HBox msgContainer = new HBox();
@@ -124,8 +125,6 @@ public class HelloController {
         messageList.getChildren().add(msgContainer);
         outgoingMessage.clear();
     }
-
-
 
 
 }
