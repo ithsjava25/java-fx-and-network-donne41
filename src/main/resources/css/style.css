@@ -32,12 +32,21 @@
 #messageList{
     -fx-tile-alignment: center;
 }
-#messageRecived{
-    -fx-alignment: CENTER_LEFT;
+
+#messagetextId{
+    -fx-background-color: lightblue;
+    -fx-background-radius: 5px;
+    -fx-font-size: 14px;
+    -fx-opacity: 0.8;
 }
-#messageSent{
-    -fx-alignment: CENTER_RIGHT;
+#messageLabel{
+    -fx-background-color: white;
+    -fx-background-radius: 5px;
+    -fx-opacity: 0.8;
+    -fx-font-size: 13px;
+
 }
+
 
 #outgoingMessage {
     -fx-pref-height: 50px;
