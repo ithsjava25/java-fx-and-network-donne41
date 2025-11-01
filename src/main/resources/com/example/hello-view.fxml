@@ -3,25 +3,31 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane prefHeight="391.0" prefWidth="388.0" stylesheets="@../../css/style.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.HelloController">
+<?import javafx.scene.text.Text?>
+<BorderPane fx:id="root" prefHeight="391.0" prefWidth="388.0" stylesheets="@../../css/style.css"
+            xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.example.HelloController">
     <top>
         <VBox fx:id="topBoxInfo">
-            <Label fx:id="connectionStatus" text="Current connection status" />
-            <Label fx:id="currentChatMemeber" text="Current reciver" />
+            <HBox fx:id="topLeftBox">
+                <Text fx:id="connectionStatus" text="Current connection status"/>
+                <Text fx:id="currentChatMemeber" text="Current reciver"/>
+            </HBox>
+            <HBox fx:id="topRightBox" alignment="TOP_RIGHT">
+            </HBox>
         </VBox>
     </top>
     <center>
         <ScrollPane fx:id="messageArea" fitToHeight="true" fitToWidth="true">
-            <VBox fx:id="messageList" alignment="TOP_CENTER"  >
-                <HBox fx:id="messageRecived" />
-                <HBox fx:id="messageSent" alignment="TOP_RIGHT" />
+            <VBox fx:id="messageList" alignment="TOP_CENTER" spacing="1">
             </VBox>
         </ScrollPane>
     </center>
     <bottom>
         <HBox>
-            <TextField fx:id="outgoingMessage" onAction="#enterButtonSend" text="Skicka ett meddelande" HBox.hgrow="SOMETIMES" />
-            <Button fx:id="sendButton" onAction="#sendButtonCliked" text="send" />
+            <TextField fx:id="outgoingMessage" onAction="#enterButtonSend" text="Send a message"
+                       HBox.hgrow="SOMETIMES"/>
+            <Button fx:id="sendButton" onAction="#sendButtonCliked" text="Send"/>
         </HBox>
     </bottom>
 </BorderPane>
