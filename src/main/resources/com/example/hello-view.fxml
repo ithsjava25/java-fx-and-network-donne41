@@ -2,16 +2,14 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<?import javafx.scene.text.Text?>
-<BorderPane fx:id="root" prefHeight="391.0" prefWidth="388.0" stylesheets="@../../css/style.css"
-            xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.example.HelloController">
+<BorderPane fx:id="root" prefHeight="391.0" prefWidth="388.0" stylesheets="@../../css/style.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.HelloController">
     <top>
         <VBox fx:id="topBoxInfo">
             <HBox fx:id="topLeftBox">
-                <Text fx:id="connectionStatus" text="Current connection status"/>
-                <Text fx:id="currentChatMemeber" text="Current reciver"/>
+                <Text fx:id="connectionStatus" text="Current connection status" />
+                <Text fx:id="currentChatMemeber" text="Current reciver" />
             </HBox>
             <HBox fx:id="topRightBox" alignment="TOP_RIGHT">
             </HBox>
@@ -25,9 +23,8 @@
     </center>
     <bottom>
         <HBox>
-            <TextField fx:id="outgoingMessage" onAction="#enterButtonSend" text="Send a message"
-                       HBox.hgrow="SOMETIMES"/>
-            <Button fx:id="sendButton" onAction="#sendButtonCliked" text="Send"/>
+            <TextField fx:id="outgoingMessage" onAction="#enterButtonSend" onDragDropped="#sendImage" text="Send a message" HBox.hgrow="SOMETIMES" />
+            <Button fx:id="sendButton" onAction="#sendButtonCliked" text="Send" />
         </HBox>
     </bottom>
 </BorderPane>

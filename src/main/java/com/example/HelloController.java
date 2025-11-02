@@ -9,10 +9,13 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.DragEvent;
 import javafx.scene.layout.*;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
+import javafx.stage.FileChooser.*;
 import java.io.File;
+import java.util.regex.Pattern;
 
 /**
  * Controller layer: mediates between the view (FXML) and the model.
@@ -105,13 +108,18 @@ public class HelloController {
         });
     }
 
-//TODO skicka endast bilder vidare till setBackground().
 private void setBackgroundImage() {
     FileChooser chooser = new FileChooser();
     chooser.setTitle("Open Resource File");
+    chooser.getExtensionFilters().addAll(
+            new ExtensionFilter("Image files png,jpg,bmp", "*.jpg", "*.png", "*.bmp")
+    );
     File file = chooser.showOpenDialog(null);
-    System.out.println(file);
-}
+    if(file != null){
+        setNewBackground(new Image(file.toURI().toString()));
+        }
+    }
+
 
 //    public void addMessageToView(Message message) {
 //        Label messageLabel = new Label(message.getMessage());
@@ -183,5 +191,9 @@ private void makeNewSentMsg(String text) {
     outgoingMessage.clear();
 }
 
+    //TODO Drag and drop image.
+    // make new image messagebox.
+    public void sendImage(DragEvent dragEvent) {
 
+    }
 }
