@@ -24,7 +24,7 @@
     <bottom>
         <HBox>
             <TextField fx:id="outgoingMessage" onAction="#enterButtonSend" onDragDropped="#sendImage" text="Send a message" HBox.hgrow="SOMETIMES" />
-            <Button fx:id="sendButton" onAction="#sendButtonCliked" text="Send" />
+            <Button fx:id="sendButton" onAction="#enterButtonSend" text="Send" />
         </HBox>
     </bottom>
 </BorderPane>

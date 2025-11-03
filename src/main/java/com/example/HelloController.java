@@ -5,17 +5,16 @@ import javafx.collections.ListChangeListener;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.DragEvent;
+import javafx.scene.input.Dragboard;
 import javafx.scene.layout.*;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.*;
 import java.io.File;
-import java.util.regex.Pattern;
 
 /**
  * Controller layer: mediates between the view (FXML) and the model.
@@ -52,6 +51,7 @@ public class HelloController {
         if (messageLabel != null) {
             messageLabel.setText(model.getGreeting());
         }
+        model.receiveMessage();
         setupMenuButton();
         setupListerners();
         setupBindinger();
@@ -94,9 +94,19 @@ public class HelloController {
 
 
     private void setupListerners() {
-        model.getMessages().addListener((ListChangeListener.Change<? extends Message> c) -> {
+        model.getMessages().addListener((ListChangeListener.Change<? extends transfereMessageDTO> c) -> {
             Platform.runLater(() -> {
-                outgoingMessage.requestFocus();
+                System.out.println("Message list change detected!");
+                while(c.next()){
+                    if(c.wasAdded()){
+                        var addedMessage =  c.getAddedSubList().getFirst();
+                        if(addedMessage.message().matches("^chatAholic.*")){
+                            makeNewSentMsg(addedMessage);
+                        }else {
+                            makeNewIncomingMsg(addedMessage);
+                        }
+                    }
+                }
             });
         });
         settingsBackground.setOnAction(e -> {
@@ -121,28 +131,10 @@ private void setBackgroundImage() {
     }
 
 
-//    public void addMessageToView(Message message) {
-//        Label messageLabel = new Label(message.getMessage());
-//    }
-
 
 /**
- * Simulate recived messenges. Suppost  to be on the left side
- *
- * @param actionEvent Send button.
- */
-public void sendButtonCliked(ActionEvent actionEvent) {
-    String text = outgoingMessage.getText().trim();
-    if (text.isEmpty()) {
-        outgoingMessage.clear();
-        return;
-    }
-    makeNewIncomingMsg(text);
-}
-
-/**
- * Simulate sent messenges. Suppost to be on the right side.
- *
+ * Send messenges. Suppost to be on the right side.
+ * Wont send if empty textfield.
  * @param actionEvent Enter button
  */
 public void enterButtonSend(ActionEvent actionEvent) {
@@ -151,17 +143,20 @@ public void enterButtonSend(ActionEvent actionEvent) {
         outgoingMessage.clear();
         return;
     }
-    makeNewSentMsg(text);
-}
+    model.sendMessage("chatAholic: " + text);
+    outgoingMessage.requestFocus();
 
-private void makeNewIncomingMsg(String text) {
-    model.addMessage(text, "IncomingMsg");
+}
+private void makeNewIncomingMsg(transfereMessageDTO message) {
+//    String textMsg = message.message();
+//    String sender = textMsg.substring(0,9);
+//    String text = textMsg.substring(10);
     HBox msgContainer = new HBox();
     msgContainer.setId("msgContainer");
-    BorderPane messageBox = new BorderPane(new ScrollPane(new Text(model.getMessages().getLast().getMessage())));
+    BorderPane messageBox = new BorderPane(new ScrollPane(new Text(message.message())));
     messageBox.getCenter().setId("messagetextId");
-    HBox timeStampBox = new HBox(new VBox(new Text(model.getMessages().getLast().getTimeStamp())));
-    HBox senderTextBox = new HBox(new VBox(new Text(model.getMessages().getLast().getSender())));
+    HBox timeStampBox = new HBox(new VBox(message.time()));
+    HBox senderTextBox = new HBox(new VBox(new Text("Web User: ")));
     HBox topBox = new HBox();
     topBox.getChildren().addAll(timeStampBox, senderTextBox);
     HBox.setHgrow(timeStampBox, Priority.ALWAYS);
@@ -173,13 +168,15 @@ private void makeNewIncomingMsg(String text) {
     outgoingMessage.clear();
 }
 
-private void makeNewSentMsg(String text) {
-    model.addMessage(text, "SentMsg");
+private void makeNewSentMsg(transfereMessageDTO message) {
+    String textMsg = message.message();
+    String sender = textMsg.substring(0,10);
+    String text = textMsg.substring(11);
     HBox msgContainer = new HBox();
-    BorderPane messageBox = new BorderPane(new ScrollPane(new Text(model.getMessages().getLast().getMessage())));
+    BorderPane messageBox = new BorderPane(new ScrollPane(new Text(text)));
     messageBox.getCenter().setId("messagetextId");
-    HBox timeStampBox = new HBox(new VBox(new Text(model.getMessages().getLast().getTimeStamp())));
-    HBox senderTextBox = new HBox(new VBox(new Text(model.getMessages().getLast().getSender())));
+    HBox timeStampBox = new HBox(new VBox(message.time()));
+    HBox senderTextBox = new HBox(new VBox(new Text(sender)));
     HBox topBox = new HBox();
     topBox.getChildren().addAll(senderTextBox, timeStampBox);
     HBox.setHgrow(senderTextBox, Priority.ALWAYS);
@@ -193,7 +190,14 @@ private void makeNewSentMsg(String text) {
 
     //TODO Drag and drop image.
     // make new image messagebox.
+    // Blinka vid mottaget meddelande.
     public void sendImage(DragEvent dragEvent) {
+        Dragboard dragboard = dragEvent.getDragboard();
+        System.out.println(dragboard);
+        if (dragboard.hasFiles()) {
+            System.out.println(dragboard.getImage());
 
+        }
     }
+
 }
