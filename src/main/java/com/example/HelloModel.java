@@ -2,6 +2,8 @@ package com.example;
 
 import io.github.cdimascio.dotenv.Dotenv;
 import javafx.application.Platform;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import tools.jackson.core.JacksonException;
@@ -20,25 +22,31 @@ import java.util.Objects;
  */
 public class HelloModel {
 
+    private final NtfyConnection connection;
     private final ObservableList<transfereMessageDTO> messages = FXCollections.observableArrayList();
-
-    private final String hostName;
-    private final HttpClient client = HttpClient.newHttpClient();
-    private final ObjectMapper mapper = new ObjectMapper();
+    private final StringProperty testMess = new SimpleStringProperty();
 
 
+    public HelloModel(NtfyConnection connection) {
 
-    public HelloModel(){
-    hostName = Dotenv.load().get("HOST_NAME");
-        System.out.println(hostName);
+        this.connection = connection;
 
     }
 
-    public ObservableList<transfereMessageDTO> getMessages(){
+    public ObservableList<transfereMessageDTO> getMessages() {
         return messages;
     }
 
+    public String getTestMess() {
+        return testMess.get();
+    }
 
+    public StringProperty testMessProperty() {
+        return testMess;
+    }
+    public void setTestMess(String testMess){
+        this.testMess.set(testMess);
+    }
 
     /**
      * Returns a greeting based on the current Java and JavaFX versions.
@@ -50,34 +58,15 @@ public class HelloModel {
     }
 
     public void sendMessage(String message) {
-        //send message to server. and http kilent.
-        HttpRequest httpRequest = HttpRequest.newBuilder()
-                .POST(HttpRequest.BodyPublishers.ofString(message))
-                .uri(URI.create(hostName + "/donne41"))
-                .build();
-        try {
-            var response = client.send(httpRequest, HttpResponse.BodyHandlers.ofString());
-        } catch (IOException e) {
-            System.out.println("Error sedning message");
-        } catch (InterruptedException e) {
-            System.out.println("Error sedning message2");}
+        testMess.set(message);
+        connection.send(testMess.get());
+
 
     }
 
-    public void receiveMessage(){
-        HttpRequest httpRequest = HttpRequest.newBuilder()
-                .GET()
-                .uri(URI.create(hostName + "/donne41/json"))
-                .build();
-
-
-        client.sendAsync(httpRequest, HttpResponse.BodyHandlers.ofLines())
-                .thenAccept(response -> response
-                        .body()
-                        .peek(System.out::println)
-                        .map(s-> mapper.readValue(s, transfereMessageDTO.class))
-                        .filter(message -> message.event().equals("message"))
-                        .forEach(s->Platform.runLater(()->messages.add(s))));
+    public void receiveMessage() {
+        connection.receive(m -> Platform.runLater(() ->
+                messages.add(m)));
     }
 }
 

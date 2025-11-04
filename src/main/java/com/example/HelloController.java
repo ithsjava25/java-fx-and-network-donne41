@@ -15,13 +15,14 @@ import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.*;
 import java.io.File;
+import java.net.URL;
 
 /**
  * Controller layer: mediates between the view (FXML) and the model.
  */
 public class HelloController {
 
-    private final HelloModel model = new HelloModel();
+    private final HelloModel model = new HelloModel(new NtfyConnectionImpl());
 
     @FXML
     private Label messageLabel;
@@ -56,6 +57,7 @@ public class HelloController {
         setupListerners();
         setupBindinger();
         setupBackground();
+        setTheme();
     }
 
     private void setupBackground() {
@@ -128,6 +130,16 @@ private void setBackgroundImage() {
     if(file != null){
         setNewBackground(new Image(file.toURI().toString()));
         }
+    }
+    public void setTheme(){
+        URL themeCss = getClass().getResource("/css/style.css");
+        System.out.println(themeCss);
+        if(themeCss != null) {
+            root.getStylesheets().add(themeCss.toExternalForm());
+        }
+    }
+    public void changeTheme(){
+        root.getStylesheets();
     }
 
 
