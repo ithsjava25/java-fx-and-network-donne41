@@ -4,6 +4,9 @@ import java.util.function.Consumer;
 
 public interface NtfyConnection {
 
-    public boolean send(String message);
-    public void receive(Consumer<transfereMessageDTO> messageHandler);
+    String getChatRoom();
+    void setChatRoom(String chatRoom);
+    void restartConnection();
+    boolean send(String message);
+    void receive(Consumer<transfereMessageDTO> messageHandler);
 }

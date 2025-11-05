@@ -8,6 +8,16 @@ public class NtfyConnectionSpy implements NtfyConnection {
     //detta är en Test Dubble.
 
     @Override
+    public String getChatRoom() {
+        return "";
+    }
+
+    @Override
+    public void setChatRoom(String chatRoom) {
+
+    }
+
+    @Override
     public boolean send(String message) {
         this.message = message;
         return true;

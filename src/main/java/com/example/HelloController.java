@@ -44,7 +44,8 @@ public class HelloController {
     private HBox topRightBox;
     private MenuButton settingsButton;
     MenuItem settingsBackground;
-    MenuItem settingsFontSize;
+    MenuItem settingsTheme;
+    TextField chatRoomInput;
     BackgroundSize backgroundSize;
 
     @FXML
@@ -82,15 +83,18 @@ public class HelloController {
 
     }
 
+
     private void setupMenuButton() {
         settingsBackground = new MenuItem("Background");
-        settingsFontSize = new MenuItem("Font size");
+        settingsTheme = new MenuItem("Theme");
+        chatRoomInput = new TextField("Set new chatroom topic");
+        CustomMenuItem settingsChatRoom = new CustomMenuItem(chatRoomInput, false);
         ImageView menuIcon = new ImageView();
         Image menuPic = new Image(getClass().getResource("/attachment.png").toExternalForm());
         menuIcon.setFitHeight(15);
         menuIcon.setFitWidth(15);
         menuIcon.setImage(menuPic);
-        settingsButton = new MenuButton("", menuIcon, settingsBackground, settingsFontSize);
+        settingsButton = new MenuButton("", menuIcon, settingsBackground, settingsTheme, settingsChatRoom);
         topRightBox.getChildren().add(settingsButton);
     }
 
@@ -115,8 +119,23 @@ public class HelloController {
             setBackgroundImage();
         });
 
-        settingsFontSize.setOnAction(e -> {
-            System.out.println("Setting font size might be complicated actually");
+        settingsTheme.setOnAction(e -> {
+            changeTheme();
+        });
+        settingsButton.setOnMouseClicked(e -> {
+            chatRoomInput.clear();
+            chatRoomInput.setText("Set new chatroom topic");
+        });
+        chatRoomInput.setOnMouseClicked(event -> {
+            chatRoomInput.clear();
+
+        });
+        chatRoomInput.setOnAction(e -> {
+            String newTopic = chatRoomInput.getText().trim();
+            System.out.println("Enter press from chatRoomInput!");
+            if(!newTopic.isEmpty()){
+                model.setTopic(newTopic);
+            };
         });
     }
 
@@ -138,10 +157,20 @@ private void setBackgroundImage() {
             root.getStylesheets().add(themeCss.toExternalForm());
         }
     }
-    public void changeTheme(){
-        root.getStylesheets();
+    public void changeTheme() {
+        FileChooser chooser = new FileChooser();
+        chooser.setTitle("Upload new Stylesheet");
+        chooser.getExtensionFilters().addAll(
+                new ExtensionFilter("Stylesheet", "*.css"));
+        File chosenFile = chooser.showOpenDialog(null);
+        if (chosenFile != null) {
+            String cssPath = chosenFile.toURI().toString();
+            root.getStylesheets().clear();
+            root.getStylesheets().add(cssPath);
+        } else {
+            System.out.println("No file selected");
+        }
     }
-
 
 
 /**
@@ -151,6 +180,7 @@ private void setBackgroundImage() {
  */
 public void enterButtonSend(ActionEvent actionEvent) {
     String text = outgoingMessage.getText().trim();
+    System.out.println("Enter press from messageField!");
     if (text.isEmpty()) {
         outgoingMessage.clear();
         return;

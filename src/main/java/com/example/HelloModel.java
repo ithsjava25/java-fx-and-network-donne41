@@ -47,6 +47,11 @@ public class HelloModel {
     public void setTestMess(String testMess){
         this.testMess.set(testMess);
     }
+    public void setTopic(String topic){
+        connection.restartConnection();
+        connection.setChatRoom(topic);
+        receiveMessage();
+    }
 
     /**
      * Returns a greeting based on the current Java and JavaFX versions.
@@ -58,8 +63,9 @@ public class HelloModel {
     }
 
     public void sendMessage(String message) {
-        testMess.set(message);
-        connection.send(testMess.get());
+        //testMess.set(message);
+        System.out.println("Model sendMessage: " + message);
+        connection.send(message);
 
 
     }

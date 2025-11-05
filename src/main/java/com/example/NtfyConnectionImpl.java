@@ -13,8 +13,9 @@ import java.util.Objects;
 import java.util.function.Consumer;
 
 public class NtfyConnectionImpl implements NtfyConnection {
-    private final HttpClient client = HttpClient.newHttpClient();
+    private HttpClient client;
     private final String hostName;
+    private String chatRoom = "/donne41";
     private final ObjectMapper mapper = new ObjectMapper();
 
 
@@ -22,23 +23,44 @@ public class NtfyConnectionImpl implements NtfyConnection {
     public NtfyConnectionImpl() {
         Dotenv dotenv = Dotenv.load();
         this.hostName = Objects.requireNonNull(dotenv.get("HOST_NAME"));
+        newClient();
 
     }
     public NtfyConnectionImpl(String hostName) {
         this.hostName = hostName;
+        newClient();
+    }
+    public void newClient(){
+         client = HttpClient.newHttpClient();
+    }
+    public void setChatRoom(String chatroom){
+        if(chatroom.matches("^/.*")){
+            this.chatRoom = chatroom;
+        }else {
+            this.chatRoom = "/"+chatroom;
+        }
+    }
+    public String getChatRoom(){
+        return chatRoom;
+    }
+    public void restartConnection(){
+        client.shutdownNow();
+        newClient();
     }
 
     @Override
     public boolean send(String message) {
+        System.out.println("NtfyConn.send, Hostname, chatRoom: " + hostName+ chatRoom);
                 HttpRequest httpRequest = HttpRequest.newBuilder()
                 .POST(HttpRequest.BodyPublishers.ofString(message))
-                .uri(URI.create(hostName + "/donne41"))
+                .uri(URI.create(hostName + chatRoom))
                 .build();
         try {
             var response = client.send(httpRequest, HttpResponse.BodyHandlers.discarding());
+            System.out.println(response);
             return true;
         } catch (IOException e) {
-            System.out.println("Error sedning message");
+            System.out.println("Error sedning message "+ e.getMessage());
         } catch (InterruptedException e) {
             System.out.println("Interruppted sending message2");
         }
@@ -49,7 +71,7 @@ public class NtfyConnectionImpl implements NtfyConnection {
     public void receive(Consumer<transfereMessageDTO> messageHandler) {
             HttpRequest httpRequest = HttpRequest.newBuilder()
                     .GET()
-                    .uri(URI.create(hostName + "/donne41/json"))
+                    .uri(URI.create(hostName + chatRoom+"/json"))
                     .build();
 
 

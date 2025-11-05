@@ -21,9 +21,9 @@ class HelloModelTest {
         //arrange  Given
         var spy = new NtfyConnectionSpy();
         var model = new HelloModel(spy);
-        model.setTestMess("Hello World");
+        model.setTestMess("");
         //act   When
-        model.sendMessage("");
+        model.sendMessage("Hello World");
         //assert    Then
         assertThat(spy.message).isEqualTo("Hello World");
     }
@@ -33,12 +33,12 @@ class HelloModelTest {
         var con = new NtfyConnectionImpl("http://localhost:" + wmRuntimeInfo.getHttpPort());
         var model = new HelloModel(con);
         model.setTestMess("");
-        stubFor(post("/donne41").willReturn(ok()));
+        stubFor(post("/topic").willReturn(ok()));
 
         model.sendMessage("Hello World");
 
         //verify
-        verify(postRequestedFor(WireMock.urlEqualTo("/donne41"))
+        verify(postRequestedFor(WireMock.urlEqualTo("/topic"))
                 .withRequestBody(matching("Hello World")));
     }
 
