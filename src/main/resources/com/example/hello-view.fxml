@@ -9,9 +9,10 @@
         <VBox fx:id="topBoxInfo">
             <HBox fx:id="topLeftBox">
                 <Text fx:id="connectionStatus" text="Current connection status" />
-                <Text fx:id="currentTopic"  />
+
             </HBox>
             <HBox fx:id="topRightBox" alignment="TOP_RIGHT">
+                <Text fx:id="currentTopic" />
             </HBox>
         </VBox>
     </top>

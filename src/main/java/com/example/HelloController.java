@@ -25,12 +25,6 @@ public class HelloController {
     private final HelloModel model = new HelloModel(new NtfyConnectionImpl());
 
     @FXML
-    private Label messageLabel;
-    @FXML
-    private HBox messageSent;
-    @FXML
-    private HBox messageRecived;
-    @FXML
     private BorderPane root;
     @FXML
     private BackgroundImage backgroundImage;
@@ -52,9 +46,6 @@ public class HelloController {
 
     @FXML
     private void initialize() {
-        if (messageLabel != null) {
-            messageLabel.setText(model.getGreeting());
-        }
         model.receiveMessage();
         setupMenuButton();
         setupListerners();
@@ -82,6 +73,7 @@ public class HelloController {
 
     private void setupBindinger() {
         messageArea.vvalueProperty().bind(messageList.heightProperty());
+        currentTopic.textProperty().bind(model.newTopicProperty());
 
     }
 
@@ -117,7 +109,13 @@ public class HelloController {
                 }
             });
         });
-        ;
+        chatRoomInput.textProperty().addListener((observable, oldValue, newValue) -> {
+            if(newValue.matches(".*\\s+.*")){
+                chatRoomInput.setStyle("-fx-border-color: red;");
+            }else{
+                chatRoomInput.setStyle("-fx-border-color: green;");
+            }
+        });
         settingsBackground.setOnAction(e -> {
             setBackgroundImage();
         });
@@ -134,12 +132,12 @@ public class HelloController {
 
         });
         chatRoomInput.setOnAction(e -> {
-            String newTopic = chatRoomInput.getText().trim();
-            System.out.println("Enter press from chatRoomInput!");
-            if(!newTopic.isEmpty()){
-                model.setTopic(newTopic);
-            };
+            String newTopic = chatRoomInput.getText();
+            if(!newTopic.isEmpty() && !newTopic.matches(".*\\s+.*")){
+                model.setNewTopic(newTopic);
+            }
         });
+
     }
 
 private void setBackgroundImage() {

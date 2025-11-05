@@ -3,14 +3,13 @@ package com.example;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.junit5.WireMockTest;
 
-import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.junit5.WireMockRuntimeInfo;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+
 @WireMockTest
 class HelloModelTest {
 
@@ -21,7 +20,7 @@ class HelloModelTest {
         //arrange  Given
         var spy = new NtfyConnectionSpy();
         var model = new HelloModel(spy);
-        model.setTestMess("");
+        model.setNewTopic("");
         //act   When
         model.sendMessage("Hello World");
         //assert    Then
@@ -32,7 +31,7 @@ class HelloModelTest {
     void sendMessageToFakeServer(WireMockRuntimeInfo wmRuntimeInfo){
         var con = new NtfyConnectionImpl("http://localhost:" + wmRuntimeInfo.getHttpPort());
         var model = new HelloModel(con);
-        model.setTestMess("");
+        model.setNewTopic("");
         stubFor(post("/topic").willReturn(ok()));
 
         model.sendMessage("Hello World");
