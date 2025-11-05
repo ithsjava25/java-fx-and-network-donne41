@@ -2,6 +2,8 @@ package com.example;
 
 import io.github.cdimascio.dotenv.Dotenv;
 import javafx.application.Platform;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import tools.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
@@ -43,6 +45,7 @@ public class NtfyConnectionImpl implements NtfyConnection {
     public String getChatRoom(){
         return chatRoom;
     }
+
     public void restartConnection(){
         client.shutdownNow();
         newClient();
@@ -56,13 +59,11 @@ public class NtfyConnectionImpl implements NtfyConnection {
                 .uri(URI.create(hostName + chatRoom))
                 .build();
         try {
-            var response = client.send(httpRequest, HttpResponse.BodyHandlers.discarding());
+            var response = client.sendAsync(httpRequest, HttpResponse.BodyHandlers.discarding());
             System.out.println(response);
             return true;
-        } catch (IOException e) {
-            System.out.println("Error sedning message "+ e.getMessage());
-        } catch (InterruptedException e) {
-            System.out.println("Interruppted sending message2");
+        } catch (IllegalArgumentException e) {
+            System.out.println("Falty argument while sending message "+ e.getMessage());
         }
         return false;
     }

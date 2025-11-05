@@ -63,7 +63,6 @@ public class HelloModel {
     }
 
     public void sendMessage(String message) {
-        //testMess.set(message);
         System.out.println("Model sendMessage: " + message);
         connection.send(message);
 

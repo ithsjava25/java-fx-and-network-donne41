@@ -41,6 +41,8 @@ public class HelloController {
     @FXML
     private TextField outgoingMessage;
     @FXML
+    private Text currentTopic;
+    @FXML
     private HBox topRightBox;
     private MenuButton settingsButton;
     MenuItem settingsBackground;
@@ -115,6 +117,7 @@ public class HelloController {
                 }
             });
         });
+        ;
         settingsBackground.setOnAction(e -> {
             setBackgroundImage();
         });
