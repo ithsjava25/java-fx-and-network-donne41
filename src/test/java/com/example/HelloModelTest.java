@@ -20,7 +20,6 @@ class HelloModelTest {
         //arrange  Given
         var spy = new NtfyConnectionSpy();
         var model = new HelloModel(spy);
-        model.setNewTopic("");
         //act   When
         model.sendMessage("Hello World");
         //assert    Then
@@ -31,13 +30,12 @@ class HelloModelTest {
     void sendMessageToFakeServer(WireMockRuntimeInfo wmRuntimeInfo){
         var con = new NtfyConnectionImpl("http://localhost:" + wmRuntimeInfo.getHttpPort());
         var model = new HelloModel(con);
-        model.setNewTopic("");
-        stubFor(post("/topic").willReturn(ok()));
+        stubFor(post("/donne41").willReturn(ok()));
 
         model.sendMessage("Hello World");
 
         //verify
-        verify(postRequestedFor(WireMock.urlEqualTo("/topic"))
+        verify(postRequestedFor(WireMock.urlEqualTo("/donne41"))
                 .withRequestBody(matching("Hello World")));
     }
 

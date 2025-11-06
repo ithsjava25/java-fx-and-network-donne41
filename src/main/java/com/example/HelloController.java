@@ -11,6 +11,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.layout.*;
+import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.*;
@@ -37,7 +38,11 @@ public class HelloController {
     @FXML
     private Text currentTopic;
     @FXML
-    private HBox topRightBox;
+    private Circle connectionStatus;
+    @FXML
+    private ImageView settingsImage;
+    @FXML
+    private HBox topHbox;
     private MenuButton settingsButton;
     MenuItem settingsBackground;
     MenuItem settingsTheme;
@@ -46,12 +51,11 @@ public class HelloController {
 
     @FXML
     private void initialize() {
-        model.receiveMessage();
-        setupMenuButton();
-        setupListerners();
-        setupBindinger();
+        setupMenuImage();
         setupBackground();
         setTheme();
+        setupListerners();
+        setupBindinger();
     }
 
     private void setupBackground() {
@@ -78,18 +82,26 @@ public class HelloController {
     }
 
 
-    private void setupMenuButton() {
+    private void setupMenuImage(){
+        ImageView settingsDots = new ImageView(new Image(getClass()
+                .getResource("/threeDotsSettings.png").toExternalForm()));
+        settingsDots.setFitHeight(30);
+        settingsDots.setFitWidth(10);
+        ContextMenu contextMenu = new ContextMenu();
         settingsBackground = new MenuItem("Background");
         settingsTheme = new MenuItem("Theme");
         chatRoomInput = new TextField("Set new chatroom topic");
         CustomMenuItem settingsChatRoom = new CustomMenuItem(chatRoomInput, false);
-        ImageView menuIcon = new ImageView();
-        Image menuPic = new Image(getClass().getResource("/attachment.png").toExternalForm());
-        menuIcon.setFitHeight(15);
-        menuIcon.setFitWidth(15);
-        menuIcon.setImage(menuPic);
-        settingsButton = new MenuButton("", menuIcon, settingsBackground, settingsTheme, settingsChatRoom);
-        topRightBox.getChildren().add(settingsButton);
+        contextMenu.getItems().addAll(settingsBackground, settingsTheme, settingsChatRoom);
+        settingsImage = settingsDots;
+        topHbox.getChildren().add(settingsDots);
+        settingsDots.setOnMouseClicked(event -> {
+            contextMenu.show(settingsImage, event.getScreenX(), event.getScreenY());
+            chatRoomInput.clear();
+            chatRoomInput.setText("Set new chatroom topic");
+        });
+
+
     }
 
 
@@ -123,10 +135,6 @@ public class HelloController {
         settingsTheme.setOnAction(e -> {
             changeTheme();
         });
-        settingsButton.setOnMouseClicked(e -> {
-            chatRoomInput.clear();
-            chatRoomInput.setText("Set new chatroom topic");
-        });
         chatRoomInput.setOnMouseClicked(event -> {
             chatRoomInput.clear();
 
@@ -136,6 +144,9 @@ public class HelloController {
             if(!newTopic.isEmpty() && !newTopic.matches(".*\\s+.*")){
                 model.setNewTopic(newTopic);
             }
+        });
+        outgoingMessage.setOnMouseClicked(event -> {
+            outgoingMessage.clear();
         });
 
     }

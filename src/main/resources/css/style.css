@@ -18,6 +18,11 @@
     -fx-padding: 10px;
     -fx-alignment: center_left;
 }
+#topHbox{
+    -fx-padding: 10px;
+}
+#settingsImage{
+}
 .button{
 
 }

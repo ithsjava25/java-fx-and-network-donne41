@@ -4,17 +4,16 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<BorderPane fx:id="root" prefHeight="391.0" prefWidth="388.0"  xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.HelloController">
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.shape.Circle?>
+<BorderPane fx:id="root" prefHeight="391.0" prefWidth="388.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.HelloController">
     <top>
-        <VBox fx:id="topBoxInfo">
-            <HBox fx:id="topLeftBox">
-                <Text fx:id="connectionStatus" text="Current connection status" />
-
-            </HBox>
-            <HBox fx:id="topRightBox" alignment="TOP_RIGHT">
-                <Text fx:id="currentTopic" />
-            </HBox>
-        </VBox>
+        <HBox fx:id="topHbox">
+            <Circle fx:id="connectionStatus" />
+            <Text fx:id="currentTopic" />
+        <Region fx:id="spacerTopBox" HBox.hgrow="SOMETIMES"/>
+            <ImageView fx:id="settingsImage" />
+        </HBox>
     </top>
     <center>
         <ScrollPane fx:id="messageArea" fitToHeight="true" fitToWidth="true">

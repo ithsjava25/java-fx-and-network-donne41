@@ -18,6 +18,12 @@ public class NtfyConnectionSpy implements NtfyConnection {
     }
 
     @Override
+    public void restartConnection() {
+
+    }
+
+
+    @Override
     public boolean send(String message) {
         this.message = message;
         return true;
