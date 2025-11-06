@@ -1,9 +1,6 @@
 
 .root {
     -fx-alignment: "center";
-    /*-fx-background-image: url("/natureBackground.jpg");*/
-    /*-fx-background-size: cover;*/
-    /*-fx-background-color: #616060;*/
 }
 #topBoxInfo {
     -fx-alignment: "center";
@@ -26,23 +23,25 @@
 .button{
 
 }
-
 .scroll-pane{
     -fx-background-color: transparent;
 }
+
 .viewport{
     -fx-background-color: transparent;
 }
 #messageList{
     -fx-tile-alignment: center;
 }
-
 #messagetextId{
     -fx-background-color: lightblue;
     -fx-background-radius: 5px;
     -fx-font-size: 14px;
     -fx-opacity: 0.8;
 }
+#messageArea{
+}
+
 #messageLabel{
     -fx-background-color: white;
     -fx-background-radius: 5px;
@@ -53,8 +52,6 @@
 #currentTopic{
 
 }
-
-
 #outgoingMessage {
     -fx-pref-height: 50px;
     -fx-font-size: 14px;
@@ -62,8 +59,22 @@
     -fx-background-radius: 10px;
     -fx-opacity: 0.8;
 }
+
+
 .HBox{
     -fx-padding: 5px;
+}
+#sendImage{
+    -fx-background-image: url("/attachment.png");
+    -fx-background-size: 50%;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-background-radius: 10px;
+    -fx-background-color: rgba(3, 104, 3, 0.8);
+    -fx-alignment: center;
+    -fx-pref-height: 50px;
+    -fx-pref-width: 50px;
+
 }
 #sendButton {
     -fx-pref-height: 50px;

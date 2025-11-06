@@ -1,12 +1,8 @@
 package com.example;
 
 import io.github.cdimascio.dotenv.Dotenv;
-import javafx.application.Platform;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
 import tools.jackson.databind.ObjectMapper;
 
-import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -69,20 +65,29 @@ public class NtfyConnectionImpl implements NtfyConnection {
     }
     //TODO messageHandler har säker pajat funktionen.
     @Override
-    public void receive(Consumer<transfereMessageDTO> messageHandler) {
-            HttpRequest httpRequest = HttpRequest.newBuilder()
-                    .GET()
-                    .uri(URI.create(hostName + chatRoom+"/json"))
-                    .build();
+    public void receive(Consumer<messageDTO> messageHandler) {
+        HttpRequest httpRequest = HttpRequest.newBuilder()
+                .GET()
+                .uri(URI.create(hostName + chatRoom + "/json"))
+                .build();
 
 
-            client.sendAsync(httpRequest, HttpResponse.BodyHandlers.ofLines())
-                    .thenAccept(response -> response
-                            .body()
-                            .peek(System.out::println)
-                            .map(s -> mapper.readValue(s, transfereMessageDTO.class))
-                            .filter(message -> message.event().equals("message"))
-                            .forEach(messageHandler));
-        }
+        client.sendAsync(httpRequest, HttpResponse.BodyHandlers.ofLines())
+                .thenAccept(response -> {
+                    try {
+                        response
+                                .body()
+                                .peek(System.out::println)
+                                .map(s -> mapper.readValue(s, messageDTO.class))
+                                .peek(System.out::println)
+
+                                .filter(message -> message.event().equals("message"))
+                                .peek(System.out::println)
+                                .forEach(messageHandler);
+                    } catch (Exception e) {
+                        System.out.println("ERROR: " + e.getMessage());
+                    }
+                });
+    }
 
 }

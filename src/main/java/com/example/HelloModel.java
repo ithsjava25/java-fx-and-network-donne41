@@ -12,7 +12,7 @@ import javafx.collections.ObservableList;
 public class HelloModel {
 
     private final NtfyConnection connection;
-    private final ObservableList<transfereMessageDTO> messages = FXCollections.observableArrayList();
+    private final ObservableList<messageDTO> messages = FXCollections.observableArrayList();
     private final StringProperty newTopic = new SimpleStringProperty();
 
 
@@ -23,7 +23,7 @@ public class HelloModel {
 
     }
 
-    public ObservableList<transfereMessageDTO> getMessages() {
+    public ObservableList<messageDTO> getMessages() {
         return messages;
     }
 

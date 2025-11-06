@@ -8,5 +8,5 @@ public interface NtfyConnection {
     void setChatRoom(String chatRoom);
     void restartConnection();
     boolean send(String message);
-    void receive(Consumer<transfereMessageDTO> messageHandler);
+    void receive(Consumer<messageDTO> messageHandler);
 }

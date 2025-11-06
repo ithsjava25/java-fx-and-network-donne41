@@ -30,7 +30,7 @@ public class NtfyConnectionSpy implements NtfyConnection {
     }
 
     @Override
-    public void receive(Consumer<transfereMessageDTO> messageHandler) {
+    public void receive(Consumer<messageDTO> messageHandler) {
 
     }
 }

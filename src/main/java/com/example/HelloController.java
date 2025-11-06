@@ -10,6 +10,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
@@ -43,7 +44,9 @@ public class HelloController {
     private ImageView settingsImage;
     @FXML
     private HBox topHbox;
-    private MenuButton settingsButton;
+    @FXML
+    private Button sendImage;
+
     MenuItem settingsBackground;
     MenuItem settingsTheme;
     TextField chatRoomInput;
@@ -87,6 +90,7 @@ public class HelloController {
                 .getResource("/threeDotsSettings.png").toExternalForm()));
         settingsDots.setFitHeight(30);
         settingsDots.setFitWidth(10);
+        settingsDots.setSmooth(true);
         ContextMenu contextMenu = new ContextMenu();
         settingsBackground = new MenuItem("Background");
         settingsTheme = new MenuItem("Theme");
@@ -106,16 +110,24 @@ public class HelloController {
 
 
     private void setupListerners() {
-        model.getMessages().addListener((ListChangeListener.Change<? extends transfereMessageDTO> c) -> {
+        model.getMessages().addListener((ListChangeListener.Change<? extends messageDTO> c) -> {
             Platform.runLater(() -> {
                 System.out.println("Message list change detected!");
                 while(c.next()){
                     if(c.wasAdded()){
                         var addedMessage =  c.getAddedSubList().getFirst();
-                        if(addedMessage.message().matches("^chatAholic.*")){
-                            makeNewSentMsg(addedMessage);
+                        if(addedMessage.attachment() != null){
+                            if(addedMessage.message().matches("^chatAholic.*")){
+                                makeImageMessageBox(addedMessage, true);
+                            }
+                            makeImageMessageBox(addedMessage,false);
+                            return;
                         }else {
-                            makeNewIncomingMsg(addedMessage);
+                            if (addedMessage.message().matches("^chatAholic.*")) {
+                                makeNewMessageBox(addedMessage, true);
+                            } else {
+                                makeNewMessageBox(addedMessage, false);
+                            }
                         }
                     }
                 }
@@ -201,46 +213,48 @@ public void enterButtonSend(ActionEvent actionEvent) {
     outgoingMessage.requestFocus();
 
 }
-private void makeNewIncomingMsg(transfereMessageDTO message) {
-//    String textMsg = message.message();
-//    String sender = textMsg.substring(0,9);
-//    String text = textMsg.substring(10);
-    HBox msgContainer = new HBox();
-    msgContainer.setId("msgContainer");
-    BorderPane messageBox = new BorderPane(new ScrollPane(new Text(message.message())));
-    messageBox.getCenter().setId("messagetextId");
-    HBox timeStampBox = new HBox(new VBox(message.time()));
-    HBox senderTextBox = new HBox(new VBox(new Text("Web User: ")));
-    HBox topBox = new HBox();
-    topBox.getChildren().addAll(timeStampBox, senderTextBox);
-    HBox.setHgrow(timeStampBox, Priority.ALWAYS);
-    messageBox.setTop(topBox);
-    messageBox.getTop().setId("messageLabel");
-    msgContainer.getChildren().add(messageBox);
-    msgContainer.setAlignment(Pos.TOP_LEFT);
-    messageList.getChildren().add(msgContainer);
-    outgoingMessage.clear();
-}
-
-private void makeNewSentMsg(transfereMessageDTO message) {
-    String textMsg = message.message();
-    String sender = textMsg.substring(0,10);
-    String text = textMsg.substring(11);
-    HBox msgContainer = new HBox();
-    BorderPane messageBox = new BorderPane(new ScrollPane(new Text(text)));
-    messageBox.getCenter().setId("messagetextId");
-    HBox timeStampBox = new HBox(new VBox(message.time()));
-    HBox senderTextBox = new HBox(new VBox(new Text(sender)));
-    HBox topBox = new HBox();
-    topBox.getChildren().addAll(senderTextBox, timeStampBox);
-    HBox.setHgrow(senderTextBox, Priority.ALWAYS);
-    messageBox.setTop(topBox);
-    messageBox.getTop().setId("messageLabel");
-    msgContainer.getChildren().add(messageBox);
+private void presentMessageSent(HBox msgContainer){
     msgContainer.setAlignment(Pos.TOP_RIGHT);
     messageList.getChildren().add(msgContainer);
     outgoingMessage.clear();
 }
+private void presentMessageReceived(HBox msgContainer){
+    msgContainer.setAlignment(Pos.TOP_LEFT);
+    messageList.getChildren().add(msgContainer);
+    outgoingMessage.clear();
+}
+private void makeNewMessageBox(messageDTO message, boolean isSent) {
+    HBox msgContainer = new HBox();
+    msgContainer.setId("msgContainer");
+    BorderPane messageBox = new BorderPane();
+    ScrollPane messageScroll = new ScrollPane();
+    messageBox.setCenter(messageScroll);
+    HBox timeStampBox = new HBox(new VBox(message.time()));
+    HBox topBox = new HBox();
+    topBox.setId("messageLabel");
+    if(isSent){
+        String textMsg = message.message();
+        String sender = textMsg.substring(0,10);
+        String text = textMsg.substring(11);
+        messageScroll.setContent(new Text(text));
+        HBox senderTextBox = new HBox(new VBox(new Text(sender)));
+        topBox.getChildren().addAll(senderTextBox, timeStampBox);
+        HBox.setHgrow(timeStampBox, Priority.ALWAYS);
+        messageBox.setTop(topBox);
+        msgContainer.getChildren().add(messageBox);
+        presentMessageSent(msgContainer);
+    }else {
+        messageScroll.setContent(new Text(message.message()));
+        HBox senderTextBox = new HBox(new VBox(new Text("Web User: ")));
+        topBox.getChildren().addAll(timeStampBox, senderTextBox);
+        HBox.setHgrow(timeStampBox, Priority.ALWAYS);
+        messageBox.setTop(topBox);
+        msgContainer.getChildren().add(messageBox);
+        presentMessageReceived(msgContainer);
+    }
+
+}
+
 
     //TODO Drag and drop image.
     // make new image messagebox.
@@ -252,6 +266,40 @@ private void makeNewSentMsg(transfereMessageDTO message) {
             System.out.println(dragboard.getImage());
 
         }
+    }
+    public void sendImage(MouseEvent mouseEvent) {
+        FileChooser chooser = new FileChooser();
+        chooser.setTitle("Upload Image");
+        chooser.getExtensionFilters().addAll(
+                new ExtensionFilter(
+                        "Image files", "*.jpg","*.png","*.gif","*.bmp"
+                )
+        );
+        File chosenFile = chooser.showOpenDialog(null);
+        if (chosenFile != null) {
+
+        }
+    }
+    public void presentImageReceived(HBox msgContainer){
+        msgContainer.setAlignment(Pos.TOP_LEFT);
+        messageList.getChildren().add(msgContainer);
+    }
+    public void presentImageSent(HBox msgContainer){
+    msgContainer.setAlignment(Pos.TOP_RIGHT);
+    messageList.getChildren().add(msgContainer);
+    }
+
+    public void makeImageMessageBox(messageDTO message, boolean isSent){
+        String messUrl = message.attachment().url().toString();
+        HBox msgContainer = new HBox();
+        msgContainer.setId("msgContainer");
+        ImageView incImage = new ImageView(new Image(messUrl));
+        TitledPane messageBox = new TitledPane(message.message(), new AnchorPane(incImage));
+        msgContainer.getChildren().add(messageBox);
+        if (isSent){
+            presentImageSent(msgContainer);
+        }
+        presentImageReceived(msgContainer);
     }
 
 }

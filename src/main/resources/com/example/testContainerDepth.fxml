@@ -1,77 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.shape.*?>
-<?import javafx.scene.text.*?>
 
-<?import com.sun.javafx.scene.control.EmbeddedTextContextMenuContent?>
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1">
-   <center>
-      <ScrollPane hbarPolicy="NEVER" BorderPane.alignment="CENTER">
-         <content>
-            <VBox alignment="TOP_CENTER">
+   <right>
+      <TitledPane animated="false" text="untitled" BorderPane.alignment="CENTER">
+        <content>
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                <children>
-                  <HBox alignment="TOP_RIGHT" prefHeight="91.0" prefWidth="587.0">
-                     <children>
-                        <Label text="Label" />
-                     </children>
-                  </HBox>
-                  <HBox prefHeight="100.0" prefWidth="200.0">
-                     <children>
-                        <Label text="Label" />
-                     </children>
-                  </HBox>
-                  <HBox fx:id="msgContainer" alignment="TOP_RIGHT" prefHeight="100.0" prefWidth="200.0">
-                     <children>
-                        <BorderPane fx:id="messageBox" prefHeight="200.0" prefWidth="200.0">
-                           <top>
-                              <HBox fx:id="topBox" prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
-                                 <children>
-                                    <HBox fx:id="timestampBox" prefHeight="100.0" prefWidth="200.0">
-                                       <children>
-                                          <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Timestamp" />
-                                       </children>
-                                    </HBox>
-                                    <HBox fx:id="senderBox" alignment="TOP_RIGHT" prefHeight="100.0" prefWidth="200.0">
-                                       <children>
-                                          <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Sender" />
-                                       </children>
-                                    </HBox>
-                                 </children>
-                              </HBox>
-                           </top>
-                        </BorderPane>
-                     </children>
-                  </HBox>
-               </children>
-            </VBox>
-         </content>
-         <BorderPane.margin>
-            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-         </BorderPane.margin>
-      </ScrollPane>
+                  <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
+               </children></AnchorPane>
+        </content>
+      </TitledPane>
+   </right>
+   <center>
+      <BorderPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+         <center>
+            <Pane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
+         </center>
+      </BorderPane>
    </center>
-   <top>
-      <HBox prefHeight="50.0" prefWidth="200.0" BorderPane.alignment="CENTER">
-         <children>
-            <Circle fill="#1fff3de8" radius="15.0" stroke="#00000072" strokeType="INSIDE" />
-            <Region HBox.hgrow="SOMETIMES" />
-         </children>
-      </HBox>
-   </top>
-   <bottom>
-      <HBox prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
-         <children>
-            <Button mnemonicParsing="false" text="Attach" />
-            <TextArea prefHeight="224.0" prefWidth="496.0" text="Type something" HBox.hgrow="SOMETIMES">
-               <HBox.margin>
-                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-               </HBox.margin>
-            </TextArea>
-            <Button mnemonicParsing="false" text="Send" />
-         </children>
-      </HBox>
-   </bottom>
 </BorderPane>
