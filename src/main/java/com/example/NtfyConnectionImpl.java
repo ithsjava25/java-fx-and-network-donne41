@@ -58,8 +58,6 @@ public class NtfyConnectionImpl implements NtfyConnection {
                     .uri(URI.create(hostName + chatRoom))
                     .build();
             var respons = client.sendAsync(httpRequest, HttpResponse.BodyHandlers.discarding());
-            System.out.println("Systemtime just after Async:" + System.currentTimeMillis());
-            System.out.println(respons);
             return true;
         } catch (Exception e) {
             System.out.println("Creating http request failed" + e.getMessage());
@@ -69,14 +67,12 @@ public class NtfyConnectionImpl implements NtfyConnection {
 
     @Override
     public boolean send(String message) {
-        System.out.println("NtfyConn.send, Hostname, chatRoom: " + hostName + chatRoom);
         HttpRequest httpRequest = HttpRequest.newBuilder()
                 .POST(HttpRequest.BodyPublishers.ofString(message))
                 .uri(URI.create(hostName + chatRoom))
                 .build();
         try {
             var response = client.sendAsync(httpRequest, HttpResponse.BodyHandlers.discarding());
-            System.out.println(response);
             return true;
         } catch (IllegalArgumentException e) {
             System.out.println("Falty argument while sending message " + e.getMessage());
@@ -98,12 +94,9 @@ public class NtfyConnectionImpl implements NtfyConnection {
                     try {
                         response
                                 .body()
-                                .peek(System.out::println)
                                 .map(s -> mapper.readValue(s, messageDTO.class))
-                                .peek(System.out::println)
 
                                 .filter(message -> message.event().equals("message"))
-                                .peek(System.out::println)
                                 .forEach(messageHandler);
                     } catch (Exception e) {
                         System.out.println("ERROR: " + e.getMessage());

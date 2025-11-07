@@ -114,7 +114,6 @@ public class HelloController {
     private void setupListerners() {
         model.getMessages().addListener((ListChangeListener.Change<? extends messageDTO> c) -> {
             Platform.runLater(() -> {
-                System.out.println("Message list change detected!");
                 while(c.next()){
                     if(c.wasAdded()){
                         var addedMessage =  c.getAddedSubList().getFirst();
@@ -179,7 +178,6 @@ private void setBackgroundImage() {
     }
     public void setTheme(){
         URL themeCss = getClass().getResource("/css/style.css");
-        System.out.println(themeCss);
         if(themeCss != null) {
             root.getStylesheets().add(themeCss.toExternalForm());
         }
@@ -207,7 +205,6 @@ private void setBackgroundImage() {
  */
 public void enterButtonSend(ActionEvent actionEvent) {
     String text = outgoingMessage.getText().trim();
-    System.out.println("Enter press from messageField!");
     if (text.isEmpty()) {
         outgoingMessage.clear();
         return;

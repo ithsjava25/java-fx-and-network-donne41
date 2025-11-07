@@ -48,7 +48,6 @@ public class HelloModel {
 
 
     public void sendMessage(String message) {
-        System.out.println("Model sendMessage: " + message);
         connection.send(message);
 
 
