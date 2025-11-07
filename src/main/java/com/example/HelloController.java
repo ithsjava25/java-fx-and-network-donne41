@@ -18,6 +18,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.*;
 import java.io.File;
 import java.net.URL;
+import java.util.EventListener;
 
 /**
  * Controller layer: mediates between the view (FXML) and the model.
@@ -227,16 +228,17 @@ private void makeNewMessageBox(messageDTO message, boolean isSent) {
     HBox msgContainer = new HBox();
     msgContainer.setId("msgContainer");
     BorderPane messageBox = new BorderPane();
-    ScrollPane messageScroll = new ScrollPane();
-    messageBox.setCenter(messageScroll);
+    VBox messageContent = new VBox();
+    messageBox.setCenter(messageContent);
     HBox timeStampBox = new HBox(new VBox(message.time()));
     HBox topBox = new HBox();
     topBox.setId("messageLabel");
+    messageBox.setId("messageBox");
     if(isSent){
         String textMsg = message.message();
         String sender = textMsg.substring(0,10);
         String text = textMsg.substring(11);
-        messageScroll.setContent(new Text(text));
+        messageContent.getChildren().add(new Text(text));
         HBox senderTextBox = new HBox(new VBox(new Text(sender)));
         topBox.getChildren().addAll(senderTextBox, timeStampBox);
         HBox.setHgrow(timeStampBox, Priority.ALWAYS);
@@ -244,7 +246,7 @@ private void makeNewMessageBox(messageDTO message, boolean isSent) {
         msgContainer.getChildren().add(messageBox);
         presentMessageSent(msgContainer);
     }else {
-        messageScroll.setContent(new Text(message.message()));
+        messageContent.getChildren().add(new Text(message.message()));
         HBox senderTextBox = new HBox(new VBox(new Text("Web User: ")));
         topBox.getChildren().addAll(timeStampBox, senderTextBox);
         HBox.setHgrow(timeStampBox, Priority.ALWAYS);
@@ -259,15 +261,15 @@ private void makeNewMessageBox(messageDTO message, boolean isSent) {
     //TODO Drag and drop image.
     // make new image messagebox.
     // Blinka vid mottaget meddelande.
-    public void sendImage(DragEvent dragEvent) {
-        Dragboard dragboard = dragEvent.getDragboard();
-        System.out.println(dragboard);
-        if (dragboard.hasFiles()) {
-            System.out.println(dragboard.getImage());
-
-        }
-    }
-    public void sendImage(MouseEvent mouseEvent) {
+//    public void sendImage(DragEvent dragEvent) {
+//        Dragboard dragboard = dragEvent.getDragboard();
+//        System.out.println(dragboard);
+//        if (dragboard.hasFiles()) {
+//            System.out.println(dragboard.getImage());
+//
+//        }
+//    }
+    public void sendImage(ActionEvent actionEvent) {
         FileChooser chooser = new FileChooser();
         chooser.setTitle("Upload Image");
         chooser.getExtensionFilters().addAll(
@@ -277,7 +279,7 @@ private void makeNewMessageBox(messageDTO message, boolean isSent) {
         );
         File chosenFile = chooser.showOpenDialog(null);
         if (chosenFile != null) {
-
+            model.sendImage(chosenFile.toPath());
         }
     }
     public void presentImageReceived(HBox msgContainer){

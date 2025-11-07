@@ -1,5 +1,6 @@
 package com.example;
 
+import java.nio.file.Path;
 import java.util.function.Consumer;
 
 public interface NtfyConnection {
@@ -8,5 +9,6 @@ public interface NtfyConnection {
     void setChatRoom(String chatRoom);
     void restartConnection();
     boolean send(String message);
+    boolean sendImage(Path file);
     void receive(Consumer<messageDTO> messageHandler);
 }

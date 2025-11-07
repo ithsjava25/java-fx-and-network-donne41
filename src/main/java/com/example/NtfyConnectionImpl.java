@@ -7,6 +7,7 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.nio.file.Path;
 import java.util.Objects;
 import java.util.function.Consumer;
 
@@ -45,6 +46,21 @@ public class NtfyConnectionImpl implements NtfyConnection {
     public void restartConnection(){
         client.shutdownNow();
         newClient();
+    }
+    public boolean sendImage(Path file){
+        try {
+            HttpRequest httpRequest = HttpRequest.newBuilder()
+                    .POST(HttpRequest.BodyPublishers.ofFile(file))
+                    .uri(URI.create(hostName + chatRoom))
+                    .build();
+
+        var respons = client.sendAsync(httpRequest, HttpResponse.BodyHandlers.discarding());
+        System.out.println(respons);
+        return true;
+        }catch (Exception e){
+            System.out.println("Creating http request failed" + e.getMessage());
+            return false;
+        }
     }
 
     @Override

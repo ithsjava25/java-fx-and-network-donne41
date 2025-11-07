@@ -6,6 +6,8 @@ import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
+import java.nio.file.Path;
+
 /**
  * Model layer: encapsulates application data and business logic.
  */
@@ -39,6 +41,9 @@ public class HelloModel {
         connection.restartConnection();
         connection.setChatRoom(newTopic);
         receiveMessage();
+    }
+    public void sendImage(Path file){
+        connection.sendImage(file);
     }
 
 

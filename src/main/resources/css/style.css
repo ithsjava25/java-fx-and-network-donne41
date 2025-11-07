@@ -41,6 +41,12 @@
 }
 #messageArea{
 }
+#messageBox{
+    -fx-background-color: lightblue;
+    -fx-background-radius: 10px;
+    -fx-opacity: 0.8;
+    -fx-padding: 5px;
+}
 
 #messageLabel{
     -fx-background-color: white;
