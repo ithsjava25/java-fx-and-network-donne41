@@ -18,46 +18,50 @@ public class NtfyConnectionImpl implements NtfyConnection {
     private final ObjectMapper mapper = new ObjectMapper();
 
 
-
     public NtfyConnectionImpl() {
         Dotenv dotenv = Dotenv.load();
         this.hostName = Objects.requireNonNull(dotenv.get("HOST_NAME"));
         newClient();
 
     }
+
     public NtfyConnectionImpl(String hostName) {
         this.hostName = hostName;
         newClient();
     }
-    public void newClient(){
-         client = HttpClient.newHttpClient();
+
+    public void newClient() {
+        client = HttpClient.newHttpClient();
     }
-    public void setChatRoom(String chatroom){
-        if(chatroom.matches("^/.*")){
+
+    public void setChatRoom(String chatroom) {
+        if (chatroom.matches("^/.*")) {
             this.chatRoom = chatroom;
-        }else {
-            this.chatRoom = "/"+chatroom;
+        } else {
+            this.chatRoom = "/" + chatroom;
         }
     }
-    public String getChatRoom(){
+
+    public String getChatRoom() {
         return chatRoom;
     }
 
-    public void restartConnection(){
+    public void restartConnection() {
         client.shutdownNow();
         newClient();
     }
-    public boolean sendImage(Path file){
+
+    public boolean sendImage(Path file) {
         try {
             HttpRequest httpRequest = HttpRequest.newBuilder()
                     .POST(HttpRequest.BodyPublishers.ofFile(file))
                     .uri(URI.create(hostName + chatRoom))
                     .build();
-
-        var respons = client.sendAsync(httpRequest, HttpResponse.BodyHandlers.discarding());
-        System.out.println(respons);
-        return true;
-        }catch (Exception e){
+            var respons = client.sendAsync(httpRequest, HttpResponse.BodyHandlers.discarding());
+            System.out.println("Systemtime just after Async:" + System.currentTimeMillis());
+            System.out.println(respons);
+            return true;
+        } catch (Exception e) {
             System.out.println("Creating http request failed" + e.getMessage());
             return false;
         }
@@ -65,8 +69,8 @@ public class NtfyConnectionImpl implements NtfyConnection {
 
     @Override
     public boolean send(String message) {
-        System.out.println("NtfyConn.send, Hostname, chatRoom: " + hostName+ chatRoom);
-                HttpRequest httpRequest = HttpRequest.newBuilder()
+        System.out.println("NtfyConn.send, Hostname, chatRoom: " + hostName + chatRoom);
+        HttpRequest httpRequest = HttpRequest.newBuilder()
                 .POST(HttpRequest.BodyPublishers.ofString(message))
                 .uri(URI.create(hostName + chatRoom))
                 .build();
@@ -75,10 +79,11 @@ public class NtfyConnectionImpl implements NtfyConnection {
             System.out.println(response);
             return true;
         } catch (IllegalArgumentException e) {
-            System.out.println("Falty argument while sending message "+ e.getMessage());
+            System.out.println("Falty argument while sending message " + e.getMessage());
         }
         return false;
     }
+
     //TODO messageHandler har säker pajat funktionen.
     @Override
     public void receive(Consumer<messageDTO> messageHandler) {

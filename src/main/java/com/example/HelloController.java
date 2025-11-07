@@ -52,6 +52,7 @@ public class HelloController {
     MenuItem settingsTheme;
     TextField chatRoomInput;
     BackgroundSize backgroundSize;
+    long systemTimeSent = 0;
 
     @FXML
     private void initialize() {
@@ -118,11 +119,12 @@ public class HelloController {
                     if(c.wasAdded()){
                         var addedMessage =  c.getAddedSubList().getFirst();
                         if(addedMessage.attachment() != null){
-                            if(addedMessage.message().matches("^chatAholic.*")){
+                            if(addedMessage.time()-systemTimeSent < 4){
                                 makeImageMessageBox(addedMessage, true);
+                            }else {
+                                makeImageMessageBox(addedMessage, false);
+                                return;
                             }
-                            makeImageMessageBox(addedMessage,false);
-                            return;
                         }else {
                             if (addedMessage.message().matches("^chatAholic.*")) {
                                 makeNewMessageBox(addedMessage, true);
@@ -200,7 +202,7 @@ private void setBackgroundImage() {
 
 /**
  * Send messenges. Suppost to be on the right side.
- * Wont send if empty textfield.
+ * Will not send if empty textfield.
  * @param actionEvent Enter button
  */
 public void enterButtonSend(ActionEvent actionEvent) {
@@ -257,10 +259,6 @@ private void makeNewMessageBox(messageDTO message, boolean isSent) {
 
 }
 
-
-    //TODO Drag and drop image.
-    // make new image messagebox.
-    // Blinka vid mottaget meddelande.
 //    public void sendImage(DragEvent dragEvent) {
 //        Dragboard dragboard = dragEvent.getDragboard();
 //        System.out.println(dragboard);
@@ -280,6 +278,7 @@ private void makeNewMessageBox(messageDTO message, boolean isSent) {
         File chosenFile = chooser.showOpenDialog(null);
         if (chosenFile != null) {
             model.sendImage(chosenFile.toPath());
+            systemTimeSent = System.currentTimeMillis()/1000;
         }
     }
     public void presentImageReceived(HBox msgContainer){
@@ -293,15 +292,22 @@ private void makeNewMessageBox(messageDTO message, boolean isSent) {
 
     public void makeImageMessageBox(messageDTO message, boolean isSent){
         String messUrl = message.attachment().url().toString();
+        String attachmentName = message.attachment().name();
         HBox msgContainer = new HBox();
         msgContainer.setId("msgContainer");
         ImageView incImage = new ImageView(new Image(messUrl));
-        TitledPane messageBox = new TitledPane(message.message(), new AnchorPane(incImage));
-        msgContainer.getChildren().add(messageBox);
+        AnchorPane imagePlace = new AnchorPane(incImage);
         if (isSent){
+            TitledPane messageBox = new TitledPane("You sent file: "+attachmentName, imagePlace);
+            msgContainer.getChildren().add(messageBox);
             presentImageSent(msgContainer);
+
+        }else {
+            TitledPane messageBox = new TitledPane("You received file: "+attachmentName, imagePlace);
+            presentImageReceived(msgContainer);
+            msgContainer.getChildren().add(messageBox);
+
         }
-        presentImageReceived(msgContainer);
     }
 
 }
