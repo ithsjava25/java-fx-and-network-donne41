@@ -313,6 +313,9 @@ private void makeNewMessageBox(messageDTO message, boolean isSent) {
         HBox msgContainer = new HBox();
         msgContainer.setId("msgContainer");
         ImageView incImage = new ImageView(new Image(messUrl));
+        incImage.setPreserveRatio(true);
+        incImage.setFitHeight(720);
+        incImage.setFitWidth(720);
         AnchorPane imagePlace = new AnchorPane(incImage);
         if (isSent){
             TitledPane messageBox = new TitledPane("You sent file: "+attachmentName, imagePlace);
