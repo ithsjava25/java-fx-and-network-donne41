@@ -95,7 +95,6 @@ public class NtfyConnectionImpl implements NtfyConnection {
                         response
                                 .body()
                                 .map(s -> mapper.readValue(s, messageDTO.class))
-
                                 .filter(message -> message.event().equals("message"))
                                 .forEach(messageHandler);
                     } catch (Exception e) {

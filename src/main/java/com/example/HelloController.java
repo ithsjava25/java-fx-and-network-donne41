@@ -8,15 +8,14 @@ import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.DragEvent;
-import javafx.scene.input.Dragboard;
-import javafx.scene.input.MouseEvent;
+import javafx.scene.input.*;
 import javafx.scene.layout.*;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.*;
 import java.io.File;
+import java.io.FileInputStream;
 import java.net.URL;
 import java.util.EventListener;
 
@@ -162,6 +161,21 @@ public class HelloController {
         outgoingMessage.setOnMouseClicked(event -> {
             outgoingMessage.clear();
         });
+        outgoingMessage.setOnDragDropped(event -> {
+            sendImageDropped(event);
+            System.out.println("DragDropp detected!");
+        });
+        outgoingMessage.setOnDragOver(event -> {
+            if(event.getGestureSource() != outgoingMessage && event.getDragboard().hasFiles()){
+                boolean hasImage = event.getDragboard().getFiles().stream()
+                                .anyMatch(file -> file.getName().toLowerCase().matches(".*\\.(png|jpg|jpeg)$"));
+                if (hasImage){
+                    event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
+                }
+            }
+            event.consume();
+            System.out.println("DragEntered detected!");
+        });
 
     }
 
@@ -256,14 +270,20 @@ private void makeNewMessageBox(messageDTO message, boolean isSent) {
 
 }
 
-//    public void sendImage(DragEvent dragEvent) {
-//        Dragboard dragboard = dragEvent.getDragboard();
-//        System.out.println(dragboard);
-//        if (dragboard.hasFiles()) {
-//            System.out.println(dragboard.getImage());
-//
-//        }
-//    }
+    public void sendImageDropped(DragEvent event) {
+    Dragboard dragboard = event.getDragboard();
+    if(dragboard.hasImage() || dragboard.hasFiles()) {
+        try {
+            model.sendImage(dragboard.getFiles().getFirst().toPath());
+            systemTimeSent = System.currentTimeMillis()/1000;
+        }catch (Exception e){
+            System.out.println("Error sending file: " + e.getMessage());
+        }
+    }
+    event.consume();
+    }
+
+
     public void sendImage(ActionEvent actionEvent) {
         FileChooser chooser = new FileChooser();
         chooser.setTitle("Upload Image");
