@@ -15,16 +15,14 @@ import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.*;
 import java.io.File;
-import java.io.FileInputStream;
 import java.net.URL;
-import java.util.EventListener;
 
 /**
  * Controller layer: mediates between the view (FXML) and the model.
  */
-public class HelloController {
+public class ChatController {
 
-    private final HelloModel model = new HelloModel(new NtfyConnectionImpl());
+    private final ChatModel model = new ChatModel(new NtfyConnectionImpl());
 
     @FXML
     private BorderPane root;
@@ -46,6 +44,7 @@ public class HelloController {
     private HBox topHbox;
     @FXML
     private Button sendImage;
+
 
     MenuItem settingsBackground;
     MenuItem settingsTheme;
@@ -89,6 +88,7 @@ public class HelloController {
     private void setupMenuImage(){
         ImageView settingsDots = new ImageView(new Image(getClass()
                 .getResource("/threeDotsSettings.png").toExternalForm()));
+        settingsDots.setPreserveRatio(true);
         settingsDots.setFitHeight(30);
         settingsDots.setFitWidth(10);
         settingsDots.setSmooth(true);

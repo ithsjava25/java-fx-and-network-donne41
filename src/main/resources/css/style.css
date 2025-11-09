@@ -56,7 +56,11 @@
 
 }
 #currentTopic{
-
+    -fx-font-size: 14px;
+    -fx-font-style: Italic;
+    -fx-text-fill: white;
+}
+#connectionStatus{
 }
 #outgoingMessage {
     -fx-pref-height: 50px;

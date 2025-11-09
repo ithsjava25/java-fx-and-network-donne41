@@ -11,14 +11,14 @@ import java.nio.file.Path;
 /**
  * Model layer: encapsulates application data and business logic.
  */
-public class HelloModel {
+public class ChatModel {
 
     private final NtfyConnection connection;
     private final ObservableList<messageDTO> messages = FXCollections.observableArrayList();
     private final StringProperty newTopic = new SimpleStringProperty();
 
 
-    public HelloModel(NtfyConnection connection) {
+    public ChatModel(NtfyConnection connection) {
 
         this.connection = connection;
         setNewTopic(connection.getChatRoom());
@@ -29,8 +29,8 @@ public class HelloModel {
         return messages;
     }
 
-    public String getNewTopic() {
-        return newTopic.get();
+    public String getTopic() {
+        return connection.getChatRoom();
     }
 
     public StringProperty newTopicProperty() {
@@ -49,8 +49,6 @@ public class HelloModel {
 
     public void sendMessage(String message) {
         connection.send(message);
-
-
     }
 
     public void receiveMessage() {
