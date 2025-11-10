@@ -36,7 +36,13 @@ class ChatModelTest {
         var model = new ChatModel(con);
         stubFor(post("/donne41").willReturn(ok()));
 
+
         model.sendMessage("Hello World");
+        try {
+            Thread.sleep(200);
+        }catch (InterruptedException e){
+            System.out.println("Thread sleep was interrupted");
+        }
 
         //verify
         verify(postRequestedFor(WireMock.urlEqualTo("/donne41"))
@@ -54,23 +60,33 @@ class ChatModelTest {
         Files.writeString(tempFile, "fake Image");
 
         model.sendImage(tempFile);
-
+        try {
+            Thread.sleep(200);
+        }catch (InterruptedException e){
+            System.out.println("Thread sleep was interrupted");
+        }
         verify(postRequestedFor(WireMock.urlEqualTo("/donne41"))
                 .withRequestBody(matching("fake Image")));
     }
+
     @Test
-    void setNewTopicShouldReturnNewTopicFakeServer(WireMockRuntimeInfo wmRuntimeInfo){
+    void setNewTopicShouldReturnNewTopicFakeServer(WireMockRuntimeInfo wmRuntimeInfo) {
         var con = new NtfyConnectionImpl("http://localhost:" + wmRuntimeInfo.getHttpPort());
         var model = new ChatModel(con);
         stubFor(post("/newTopic").willReturn(ok("changed topic")));
 
         model.setNewTopic("newTopic");
         model.sendMessage("test");
-
+        try {
+            Thread.sleep(200);
+        }catch (InterruptedException e){
+            System.out.println("Thread sleep was interrupted");
+        }
         //assertThat(model.getTopic()).isEqualTo("/newTopic");
         verify(postRequestedFor(WireMock.urlEqualTo("/newTopic"))
                 .withRequestBody(matching("test")));
     }
+
     @Test
     void sentMessageShoudBeSameAsReveivedMessage(WireMockRuntimeInfo wmRuntimeInfo) {
         var con = new NtfyConnectionImpl("http://localhost:" + wmRuntimeInfo.getHttpPort());

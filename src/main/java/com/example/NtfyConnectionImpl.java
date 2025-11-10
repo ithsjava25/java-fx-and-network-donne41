@@ -62,7 +62,7 @@ public class NtfyConnectionImpl implements NtfyConnection {
                     .POST(HttpRequest.BodyPublishers.ofFile(file))
                     .uri(URI.create(hostName + chatRoom))
                     .build();
-            var respons = client.sendAsync(httpRequest, HttpResponse.BodyHandlers.discarding()).join();
+            var respons = client.sendAsync(httpRequest, HttpResponse.BodyHandlers.discarding());
             return true;
         } catch (Exception e) {
             System.out.println("Creating http request failed" + e.getMessage());
@@ -77,7 +77,7 @@ public class NtfyConnectionImpl implements NtfyConnection {
                 .uri(URI.create(hostName + chatRoom))
                 .build();
         try {
-            var response = client.sendAsync(httpRequest, HttpResponse.BodyHandlers.discarding()).join();
+            var response = client.sendAsync(httpRequest, HttpResponse.BodyHandlers.discarding());
             return true;
         } catch (IllegalArgumentException e) {
             System.out.println("Falty argument while sending message " + e.getMessage());
