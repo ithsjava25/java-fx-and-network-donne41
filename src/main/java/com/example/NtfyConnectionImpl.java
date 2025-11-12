@@ -99,6 +99,7 @@ public class NtfyConnectionImpl implements NtfyConnection {
                     try {
                         response
                                 .body()
+                                .peek(System.out::println)
                                 .map(s -> mapper.readValue(s, messageDTO.class))
                                 .filter(message -> message.event().equals("message"))
                                 .forEach(messageHandler);

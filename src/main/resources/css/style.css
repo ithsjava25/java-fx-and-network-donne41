@@ -17,16 +17,35 @@
 }
 #topHbox{
     -fx-padding: 10px;
+    -fx-background-color: rgba(255, 255, 255, 0.35);
 }
-#settingsImage{
+#topHbox:hover{
+    -fx-background-color: rgba(255, 255, 255, 0.60);
+}
+#currentTopic{
+    -fx-font-size: 14px;
+    -fx-font-style: Italic;
+    -fx-text-fill: white;
+}
+#connectionStatus{
+}
+#settingsButton{
+    -fx-background-image: url("/threeDotsSettings.png");
+    -fx-background-size: 19%;
+    -fx-background-position: center;
+    -fx-background-repeat: no-repeat;
+    -fx-alignment: center;
+    -fx-pref-height: 35px;
+    -fx-pref-width: 50px;
+    -fx-background-color: rgba(255, 255, 255, 0.01);
 }
 .button{
 
 }
+
 .scroll-pane{
     -fx-background-color: transparent;
 }
-
 .viewport{
     -fx-background-color: transparent;
 }
@@ -41,26 +60,19 @@
 }
 #messageArea{
 }
+
 #messageBox{
     -fx-background-color: lightblue;
     -fx-background-radius: 10px;
     -fx-opacity: 0.8;
     -fx-padding: 5px;
 }
-
 #messageLabel{
     -fx-background-color: white;
     -fx-background-radius: 5px;
     -fx-opacity: 0.8;
     -fx-font-size: 13px;
 
-}
-#currentTopic{
-    -fx-font-size: 14px;
-    -fx-font-style: Italic;
-    -fx-text-fill: white;
-}
-#connectionStatus{
 }
 #outgoingMessage {
     -fx-pref-height: 50px;
@@ -80,20 +92,41 @@
     -fx-background-repeat: no-repeat;
     -fx-background-position: center;
     -fx-background-radius: 10px;
-    -fx-background-color: rgba(3, 104, 3, 0.8);
+    -fx-background-color: rgba(6, 152, 6, 0.8);
     -fx-alignment: center;
     -fx-pref-height: 50px;
     -fx-pref-width: 50px;
 
+}
+#sendImage:hover{
+    -fx-background-image: url("/attachment.png");
+    -fx-background-size: 50%;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-background-radius: 10px;
+    -fx-background-color: rgba(8, 200, 8, 0.8);
+    -fx-alignment: center;
+    -fx-pref-height: 50px;
+    -fx-pref-width: 50px;
 }
 #sendButton {
     -fx-pref-height: 50px;
     -fx-pref-width: 50px;
     -fx-alignment: center;
     -fx-background-radius: 10px;
-    -fx-background-color: #036803;
+    -fx-background-color: rgba(6, 152, 6, 0.8);
     -fx-opacity: 0.8;
     -fx-text-fill: white;
     -fx-font-size: 13px;
 
+}
+#sendButton:hover{
+    -fx-pref-height: 50px;
+    -fx-pref-width: 50px;
+    -fx-alignment: center;
+    -fx-background-radius: 10px;
+    -fx-background-color: rgba(8, 200, 8, 0.8);
+    -fx-opacity: 0.8;
+    -fx-text-fill: white;
+    -fx-font-size: 13px;
 }

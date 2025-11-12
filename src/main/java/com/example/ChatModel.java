@@ -21,7 +21,7 @@ public class ChatModel {
     public ChatModel(NtfyConnection connection) {
 
         this.connection = connection;
-        setNewTopic(connection.getChatRoom());
+        setNewTopic(getTopic());
 
     }
 
@@ -36,13 +36,17 @@ public class ChatModel {
     public StringProperty newTopicProperty() {
         return newTopic;
     }
-    public void setNewTopic(String newTopic){
-        this.newTopic.set("Chat room: " +newTopic);
-        connection.restartConnection();
-        connection.setChatRoom(newTopic);
-        receiveMessage();
+
+    public void setNewTopic(String newTopic) {
+        if (!newTopic.matches(".*[\\s\\W]+.*")) {
+            this.newTopic.set("Chat room: " + newTopic);
+            connection.restartConnection();
+            connection.setChatRoom(newTopic);
+            receiveMessage();
+        }
     }
-    public void sendImage(Path file){
+
+    public void sendImage(Path file) {
         connection.sendImage(file);
     }
 

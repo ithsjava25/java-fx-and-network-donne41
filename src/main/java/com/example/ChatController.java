@@ -14,6 +14,7 @@ import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.*;
+
 import java.io.File;
 import java.net.URL;
 
@@ -44,6 +45,8 @@ public class ChatController {
     private HBox topHbox;
     @FXML
     private Button sendImage;
+    @FXML
+    private Button settingsButton;
 
 
     MenuItem settingsBackground;
@@ -54,7 +57,7 @@ public class ChatController {
 
     @FXML
     private void initialize() {
-        setupMenuImage();
+        setupSettingsButton();
         setupBackground();
         setTheme();
         setupListerners();
@@ -72,7 +75,8 @@ public class ChatController {
         Background startBackground = new Background(backgroundImage);
         root.setBackground(startBackground);
     }
-    private void setNewBackground(Image image){
+
+    private void setNewBackground(Image image) {
         backgroundImage = new BackgroundImage(image, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, backgroundSize);
         Background background = new Background(backgroundImage);
         root.setBackground(background);
@@ -85,23 +89,16 @@ public class ChatController {
     }
 
 
-    private void setupMenuImage(){
-        ImageView settingsDots = new ImageView(new Image(getClass()
-                .getResource("/threeDotsSettings.png").toExternalForm()));
-        settingsDots.setPreserveRatio(true);
-        settingsDots.setFitHeight(30);
-        settingsDots.setFitWidth(10);
-        settingsDots.setSmooth(true);
+    private void setupSettingsButton() {
         ContextMenu contextMenu = new ContextMenu();
         settingsBackground = new MenuItem("Background");
         settingsTheme = new MenuItem("Theme");
         chatRoomInput = new TextField("Set new chatroom topic");
         CustomMenuItem settingsChatRoom = new CustomMenuItem(chatRoomInput, false);
         contextMenu.getItems().addAll(settingsBackground, settingsTheme, settingsChatRoom);
-        settingsImage = settingsDots;
-        topHbox.getChildren().add(settingsDots);
-        settingsDots.setOnMouseClicked(event -> {
-            contextMenu.show(settingsImage, event.getScreenX(), event.getScreenY());
+        settingsButton.setOnMouseClicked(event -> {
+            System.out.println("settings img press!");
+            contextMenu.show(settingsButton, event.getScreenX(), event.getScreenY());
             chatRoomInput.clear();
             chatRoomInput.setText("Set new chatroom topic");
         });
@@ -113,17 +110,17 @@ public class ChatController {
     private void setupListerners() {
         model.getMessages().addListener((ListChangeListener.Change<? extends messageDTO> c) -> {
             Platform.runLater(() -> {
-                while(c.next()){
-                    if(c.wasAdded()){
-                        var addedMessage =  c.getAddedSubList().getFirst();
-                        if(addedMessage.attachment() != null){
-                            if(addedMessage.time()-systemTimeSent < 4){
+                while (c.next()) {
+                    if (c.wasAdded()) {
+                        var addedMessage = c.getAddedSubList().getFirst();
+                        if (addedMessage.attachment() != null) {
+                            if (addedMessage.time() - systemTimeSent < 4) {
                                 makeImageMessageBox(addedMessage, true);
-                            }else {
+                            } else {
                                 makeImageMessageBox(addedMessage, false);
                                 return;
                             }
-                        }else {
+                        } else {
                             if (addedMessage.message().matches("^chatAholic.*")) {
                                 makeNewMessageBox(addedMessage, true);
                             } else {
@@ -135,9 +132,9 @@ public class ChatController {
             });
         });
         chatRoomInput.textProperty().addListener((observable, oldValue, newValue) -> {
-            if(newValue.matches(".*\\s+.*")){
+            if (newValue.matches(".*[\\s\\W]+.*")) {
                 chatRoomInput.setStyle("-fx-border-color: red;");
-            }else{
+            } else {
                 chatRoomInput.setStyle("-fx-border-color: green;");
             }
         });
@@ -154,7 +151,7 @@ public class ChatController {
         });
         chatRoomInput.setOnAction(e -> {
             String newTopic = chatRoomInput.getText();
-            if(!newTopic.isEmpty() && !newTopic.matches(".*\\s+.*")){
+            if (!newTopic.isEmpty()) {
                 model.setNewTopic(newTopic);
             }
         });
@@ -166,10 +163,10 @@ public class ChatController {
             System.out.println("DragDropp detected!");
         });
         outgoingMessage.setOnDragOver(event -> {
-            if(event.getGestureSource() != outgoingMessage && event.getDragboard().hasFiles()){
+            if (event.getGestureSource() != outgoingMessage && event.getDragboard().hasFiles()) {
                 boolean hasImage = event.getDragboard().getFiles().stream()
-                                .anyMatch(file -> file.getName().toLowerCase().matches(".*\\.(png|jpg|jpeg)$"));
-                if (hasImage){
+                        .anyMatch(file -> file.getName().toLowerCase().matches(".*\\.(png|jpg|jpeg)$"));
+                if (hasImage) {
                     event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
                 }
             }
@@ -179,23 +176,25 @@ public class ChatController {
 
     }
 
-private void setBackgroundImage() {
-    FileChooser chooser = new FileChooser();
-    chooser.setTitle("Open Resource File");
-    chooser.getExtensionFilters().addAll(
-            new ExtensionFilter("Image files png,jpg,bmp", "*.jpg", "*.png", "*.bmp")
-    );
-    File file = chooser.showOpenDialog(null);
-    if(file != null){
-        setNewBackground(new Image(file.toURI().toString()));
+    private void setBackgroundImage() {
+        FileChooser chooser = new FileChooser();
+        chooser.setTitle("Open Resource File");
+        chooser.getExtensionFilters().addAll(
+                new ExtensionFilter("Image files png,jpg,bmp", "*.jpg", "*.png", "*.bmp")
+        );
+        File file = chooser.showOpenDialog(null);
+        if (file != null) {
+            setNewBackground(new Image(file.toURI().toString()));
         }
     }
-    public void setTheme(){
+
+    public void setTheme() {
         URL themeCss = getClass().getResource("/css/style.css");
-        if(themeCss != null) {
+        if (themeCss != null) {
             root.getStylesheets().add(themeCss.toExternalForm());
         }
     }
+
     public void changeTheme() {
         FileChooser chooser = new FileChooser();
         chooser.setTitle("Upload new Stylesheet");
@@ -212,75 +211,79 @@ private void setBackgroundImage() {
     }
 
 
-/**
- * Send messenges. Suppost to be on the right side.
- * Will not send if empty textfield.
- * @param actionEvent Enter button
- */
-public void enterButtonSend(ActionEvent actionEvent) {
-    String text = outgoingMessage.getText().trim();
-    if (text.isEmpty()) {
+    /**
+     * Send messenges. Suppost to be on the right side.
+     * Will not send if empty textfield.
+     *
+     * @param actionEvent Enter button
+     */
+    public void enterButtonSend(ActionEvent actionEvent) {
+        String text = outgoingMessage.getText().trim();
+        if (text.isEmpty()) {
+            outgoingMessage.clear();
+            return;
+        }
+        model.sendMessage("chatAholic: " + text);
+        outgoingMessage.requestFocus();
+
+    }
+
+    private void presentMessageSent(HBox msgContainer) {
+        msgContainer.setAlignment(Pos.TOP_RIGHT);
+        messageList.getChildren().add(msgContainer);
         outgoingMessage.clear();
-        return;
-    }
-    model.sendMessage("chatAholic: " + text);
-    outgoingMessage.requestFocus();
-
-}
-private void presentMessageSent(HBox msgContainer){
-    msgContainer.setAlignment(Pos.TOP_RIGHT);
-    messageList.getChildren().add(msgContainer);
-    outgoingMessage.clear();
-}
-private void presentMessageReceived(HBox msgContainer){
-    msgContainer.setAlignment(Pos.TOP_LEFT);
-    messageList.getChildren().add(msgContainer);
-    outgoingMessage.clear();
-}
-private void makeNewMessageBox(messageDTO message, boolean isSent) {
-    HBox msgContainer = new HBox();
-    msgContainer.setId("msgContainer");
-    BorderPane messageBox = new BorderPane();
-    VBox messageContent = new VBox();
-    messageBox.setCenter(messageContent);
-    HBox timeStampBox = new HBox(new VBox(message.time()));
-    HBox topBox = new HBox();
-    topBox.setId("messageLabel");
-    messageBox.setId("messageBox");
-    if(isSent){
-        String textMsg = message.message();
-        String sender = textMsg.substring(0,10);
-        String text = textMsg.substring(11);
-        messageContent.getChildren().add(new Text(text));
-        HBox senderTextBox = new HBox(new VBox(new Text(sender)));
-        topBox.getChildren().addAll(senderTextBox, timeStampBox);
-        HBox.setHgrow(timeStampBox, Priority.ALWAYS);
-        messageBox.setTop(topBox);
-        msgContainer.getChildren().add(messageBox);
-        presentMessageSent(msgContainer);
-    }else {
-        messageContent.getChildren().add(new Text(message.message()));
-        HBox senderTextBox = new HBox(new VBox(new Text("Web User: ")));
-        topBox.getChildren().addAll(timeStampBox, senderTextBox);
-        HBox.setHgrow(timeStampBox, Priority.ALWAYS);
-        messageBox.setTop(topBox);
-        msgContainer.getChildren().add(messageBox);
-        presentMessageReceived(msgContainer);
     }
 
-}
+    private void presentMessageReceived(HBox msgContainer) {
+        msgContainer.setAlignment(Pos.TOP_LEFT);
+        messageList.getChildren().add(msgContainer);
+        outgoingMessage.clear();
+    }
+
+    private void makeNewMessageBox(messageDTO message, boolean isSent) {
+        HBox msgContainer = new HBox();
+        msgContainer.setId("msgContainer");
+        BorderPane messageBox = new BorderPane();
+        VBox messageContent = new VBox();
+        messageBox.setCenter(messageContent);
+        HBox timeStampBox = new HBox(new VBox(message.time()));
+        HBox topBox = new HBox();
+        topBox.setId("messageLabel");
+        messageBox.setId("messageBox");
+        if (isSent) {
+            String textMsg = message.message();
+            String sender = textMsg.substring(0, 10);
+            String text = textMsg.substring(11);
+            messageContent.getChildren().add(new Text(text));
+            HBox senderTextBox = new HBox(new VBox(new Text(sender)));
+            topBox.getChildren().addAll(senderTextBox, timeStampBox);
+            HBox.setHgrow(timeStampBox, Priority.ALWAYS);
+            messageBox.setTop(topBox);
+            msgContainer.getChildren().add(messageBox);
+            presentMessageSent(msgContainer);
+        } else {
+            messageContent.getChildren().add(new Text(message.message()));
+            HBox senderTextBox = new HBox(new VBox(new Text("Web User: ")));
+            topBox.getChildren().addAll(timeStampBox, senderTextBox);
+            HBox.setHgrow(timeStampBox, Priority.ALWAYS);
+            messageBox.setTop(topBox);
+            msgContainer.getChildren().add(messageBox);
+            presentMessageReceived(msgContainer);
+        }
+
+    }
 
     public void sendImageDropped(DragEvent event) {
-    Dragboard dragboard = event.getDragboard();
-    if(dragboard.hasImage() || dragboard.hasFiles()) {
-        try {
-            model.sendImage(dragboard.getFiles().getFirst().toPath());
-            systemTimeSent = System.currentTimeMillis()/1000;
-        }catch (Exception e){
-            System.out.println("Error sending file: " + e.getMessage());
+        Dragboard dragboard = event.getDragboard();
+        if (dragboard.hasImage() || dragboard.hasFiles()) {
+            try {
+                model.sendImage(dragboard.getFiles().getFirst().toPath());
+                systemTimeSent = System.currentTimeMillis() / 1000;
+            } catch (Exception e) {
+                System.out.println("Error sending file: " + e.getMessage());
+            }
         }
-    }
-    event.consume();
+        event.consume();
     }
 
 
@@ -289,25 +292,27 @@ private void makeNewMessageBox(messageDTO message, boolean isSent) {
         chooser.setTitle("Upload Image");
         chooser.getExtensionFilters().addAll(
                 new ExtensionFilter(
-                        "Image files", "*.jpg","*.png","*.gif","*.bmp"
+                        "Image files", "*.jpg", "*.png", "*.gif", "*.bmp"
                 )
         );
         File chosenFile = chooser.showOpenDialog(null);
         if (chosenFile != null) {
             model.sendImage(chosenFile.toPath());
-            systemTimeSent = System.currentTimeMillis()/1000;
+            systemTimeSent = System.currentTimeMillis() / 1000;
         }
     }
-    public void presentImageReceived(HBox msgContainer){
+
+    public void presentImageReceived(HBox msgContainer) {
         msgContainer.setAlignment(Pos.TOP_LEFT);
         messageList.getChildren().add(msgContainer);
     }
-    public void presentImageSent(HBox msgContainer){
-    msgContainer.setAlignment(Pos.TOP_RIGHT);
-    messageList.getChildren().add(msgContainer);
+
+    public void presentImageSent(HBox msgContainer) {
+        msgContainer.setAlignment(Pos.TOP_RIGHT);
+        messageList.getChildren().add(msgContainer);
     }
 
-    public void makeImageMessageBox(messageDTO message, boolean isSent){
+    public void makeImageMessageBox(messageDTO message, boolean isSent) {
         String messUrl = message.attachment().url().toString();
         String attachmentName = message.attachment().name();
         HBox msgContainer = new HBox();
@@ -317,13 +322,13 @@ private void makeNewMessageBox(messageDTO message, boolean isSent) {
         incImage.setFitHeight(720);
         incImage.setFitWidth(720);
         AnchorPane imagePlace = new AnchorPane(incImage);
-        if (isSent){
-            TitledPane messageBox = new TitledPane("You sent file: "+attachmentName, imagePlace);
+        if (isSent) {
+            TitledPane messageBox = new TitledPane("You sent file: " + attachmentName, imagePlace);
             msgContainer.getChildren().add(messageBox);
             presentImageSent(msgContainer);
 
-        }else {
-            TitledPane messageBox = new TitledPane("You received file: "+attachmentName, imagePlace);
+        } else {
+            TitledPane messageBox = new TitledPane("You received file: " + attachmentName, imagePlace);
             presentImageReceived(msgContainer);
             msgContainer.getChildren().add(messageBox);
 

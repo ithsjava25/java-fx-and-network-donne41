@@ -8,11 +8,11 @@
 
 <BorderPane fx:id="root" prefHeight="391.0" prefWidth="388.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.ChatController">
     <top>
-        <HBox fx:id="topHbox">
+        <HBox fx:id="topHbox" styleClass="topHbox">
             <Circle fx:id="connectionStatus" />
             <Text fx:id="currentTopic" />
         <Region fx:id="spacerTopBox" HBox.hgrow="SOMETIMES" />
-            <ImageView fx:id="settingsImage" />
+            <Button fx:id="settingsButton" />
         </HBox>
     </top>
     <center>
@@ -23,9 +23,9 @@
     </center>
     <bottom>
         <HBox>
-            <Button fx:id="sendImage" onAction="#sendImage" />
+            <Button fx:id="sendImage" styleClass="sendButton" onAction="#sendImage" />
             <TextField fx:id="outgoingMessage" onAction="#enterButtonSend" onDragDropped="#sendImageDropped" text="Send a message" HBox.hgrow="SOMETIMES" />
-            <Button fx:id="sendButton" onAction="#enterButtonSend" text="Send" />
+            <Button fx:id="sendButton" styleClass="sendButton" onAction="#enterButtonSend" text="Send" />
         </HBox>
     </bottom>
 </BorderPane>
