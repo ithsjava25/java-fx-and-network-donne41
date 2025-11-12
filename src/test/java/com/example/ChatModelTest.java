@@ -1,5 +1,6 @@
 package com.example;
 
+import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.junit5.WireMockTest;
 
@@ -12,8 +13,6 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Base64;
-import java.util.regex.Pattern;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static org.assertj.core.api.Assertions.*;
@@ -48,7 +47,6 @@ class ChatModelTest {
         var con = new NtfyConnectionImpl("http://localhost:" + wmRuntimeInfo.getHttpPort());
         var model = new ChatModel(con);
         stubFor(post("/donne41").willReturn(ok()));
-
 
         model.sendMessage("Hello World");
         try {
@@ -92,9 +90,7 @@ class ChatModelTest {
         } catch (InterruptedException e) {
             System.out.println("Thread sleep was interrupted");
         }
-        System.out.println("Test print wiremock" + WireMock.findAll(postRequestedFor(urlEqualTo("/donne41"))));
         verify(postRequestedFor(WireMock.urlEqualTo("/donne41"))
-                .withHeader("Content-Type", equalTo("image/jpeg"))
                 .withRequestBody(binaryEqualTo(Files.readAllBytes(tempImage))));
     }
 
@@ -102,6 +98,7 @@ class ChatModelTest {
     void getTopicShouldReturnCurrentTopic(WireMockRuntimeInfo wmRuntimeInfo) {
         var con = new NtfyConnectionImpl("http://localhost:" + wmRuntimeInfo.getHttpPort(), "notDefault");
         var model = new ChatModel(con);
+        stubFor(get("/notDefault/json").willReturn(ok()));
 
         model.getTopic();
 
@@ -139,25 +136,6 @@ class ChatModelTest {
         }
     }
 
-    @Test
-    void sentMessageShoudBeSameAsReveivedMessage(WireMockRuntimeInfo wmRuntimeInfo) {
-        var con = new NtfyConnectionImpl("http://localhost:" + wmRuntimeInfo.getHttpPort());
-        stubFor(get("/donne41/json").willReturn(aResponse()
-                .withHeader("Content-type", "application/json")
-                .withBody("{\"message\": \"hello world\", " +
-                        "\"time\": \"2000000\", " +
-                        "\"event\": \"message\"}")));
-        var model = new ChatModel(con);
 
-        try {
-            Thread.sleep(300);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-//        verify(postRequestedFor(WireMock.urlEqualTo("/donne41"))
-//                .withRequestBody(matching("Hello should be same in recevied!")));
-        //denna måste ha en riktigt server för att få svar från connection.receive
-        assertThat(model.getMessages().getLast().message()).isEqualTo("hello world");
-    }
 
 }

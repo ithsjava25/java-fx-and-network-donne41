@@ -29,6 +29,10 @@ public class ChatModel {
         return messages;
     }
 
+    public void addMessage(messageDTO message) {
+        messages.add(message);
+    }
+
     public String getTopic() {
         return connection.getChatRoom();
     }

@@ -29,6 +29,7 @@ public class NtfyConnectionImpl implements NtfyConnection {
         this.hostName = hostName;
         newClient();
     }
+
     public NtfyConnectionImpl(String hostName, String chatRoom) {
         this.hostName = hostName;
         this.chatRoom = chatRoom;
@@ -85,7 +86,6 @@ public class NtfyConnectionImpl implements NtfyConnection {
         return false;
     }
 
-    //TODO messageHandler har säker pajat funktionen.
     @Override
     public void receive(Consumer<messageDTO> messageHandler) {
         HttpRequest httpRequest = HttpRequest.newBuilder()
@@ -97,16 +97,25 @@ public class NtfyConnectionImpl implements NtfyConnection {
         client.sendAsync(httpRequest, HttpResponse.BodyHandlers.ofLines())
                 .thenAccept(response -> {
                     try {
+
                         response
                                 .body()
                                 .peek(System.out::println)
-                                .map(s -> mapper.readValue(s, messageDTO.class))
+                                .map(s -> {
+                                    try {
+                                        return mapper.readValue(s, messageDTO.class);
+                                    } catch (Exception e) {
+                                        return null;
+                                    }
+                                })
+                                .filter(Objects::nonNull)
                                 .filter(message -> message.event().equals("message"))
                                 .forEach(messageHandler);
                     } catch (Exception e) {
                         System.out.println("ERROR: " + e.getMessage());
                     }
                 });
+
     }
 
 }
