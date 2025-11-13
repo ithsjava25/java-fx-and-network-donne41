@@ -132,7 +132,7 @@ public class ChatController {
             });
         });
         chatRoomInput.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue.matches(".*[\\s\\W]+.*")) {
+            if (newValue.matches("^(?!/).*[\\s\\W]+.*")) {
                 chatRoomInput.setStyle("-fx-border-color: red;");
             } else {
                 chatRoomInput.setStyle("-fx-border-color: green;");
@@ -222,6 +222,9 @@ public class ChatController {
         if (text.isEmpty()) {
             outgoingMessage.clear();
             return;
+        }
+        if(text.equals("getTopic")){
+            System.out.println(model.getTopic());
         }
         model.sendMessage("chatAholic: " + text);
         outgoingMessage.requestFocus();

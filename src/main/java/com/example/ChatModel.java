@@ -44,7 +44,7 @@ public class ChatModel {
     }
 
     public void setNewTopic(String newTopic) {
-        if (!newTopic.matches(".*[\\s\\W]+.*")) {
+        if (!newTopic.matches("^(?!/).*[\\s\\W]+.*")) {
             this.newTopic.set("Chat room: " + newTopic);
             connection.restartConnection();
             connection.setChatRoom(newTopic);
