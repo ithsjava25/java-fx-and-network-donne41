@@ -1,6 +1,8 @@
 package com.example;
 
+import java.net.http.HttpResponse;
 import java.nio.file.Path;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
 public class NtfyConnectionSpy implements NtfyConnection {
@@ -10,8 +12,10 @@ public class NtfyConnectionSpy implements NtfyConnection {
 
 
     @Override
-    public boolean sendImage(Path file) {
-        return false;
+    public CompletableFuture<HttpResponse<String>> sendImage(Path file) {
+        CompletableFuture<HttpResponse<String>> response = new CompletableFuture<>();
+
+        return response;
     }
 
     @Override
@@ -31,9 +35,9 @@ public class NtfyConnectionSpy implements NtfyConnection {
 
 
     @Override
-    public boolean send(String message) {
+    public CompletableFuture<HttpResponse<String>> send(String message) {
         this.message = message;
-        return true;
+        return new CompletableFuture<HttpResponse<String>>();
     }
 
     @Override

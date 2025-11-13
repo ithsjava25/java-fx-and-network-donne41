@@ -9,6 +9,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.file.Path;
 import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
 public class NtfyConnectionImpl implements NtfyConnection {
@@ -57,33 +58,31 @@ public class NtfyConnectionImpl implements NtfyConnection {
         newClient();
     }
 
-    public boolean sendImage(Path file) {
+    public CompletableFuture<HttpResponse<String>> sendImage(Path file) {
         try {
             HttpRequest httpRequest = HttpRequest.newBuilder()
                     .POST(HttpRequest.BodyPublishers.ofFile(file))
                     .uri(URI.create(hostName + chatRoom))
                     .build();
-            var respons = client.sendAsync(httpRequest, HttpResponse.BodyHandlers.discarding());
-            return true;
+            return client.sendAsync(httpRequest, HttpResponse.BodyHandlers.ofString());
         } catch (Exception e) {
             System.out.println("Creating http request failed" + e.getMessage());
-            return false;
+            return CompletableFuture.completedFuture(null);
         }
     }
 
     @Override
-    public boolean send(String message) {
+    public CompletableFuture<HttpResponse<String>> send(String message) {
         HttpRequest httpRequest = HttpRequest.newBuilder()
                 .POST(HttpRequest.BodyPublishers.ofString(message))
                 .uri(URI.create(hostName + chatRoom))
                 .build();
         try {
-            var response = client.sendAsync(httpRequest, HttpResponse.BodyHandlers.discarding());
-            return true;
-        } catch (IllegalArgumentException e) {
+            return client.sendAsync(httpRequest, HttpResponse.BodyHandlers.ofString());
+        } catch (Exception e) {
             System.out.println("Falty argument while sending message " + e.getMessage());
         }
-        return false;
+        return CompletableFuture.failedFuture(new Exception("unable to send message"));
     }
 
     @Override

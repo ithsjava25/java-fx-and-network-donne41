@@ -1,6 +1,5 @@
 package com.example;
 
-import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.junit5.WireMockTest;
 
@@ -45,16 +44,15 @@ class ChatModelTest {
     @Test
     void sendMessageToFakeServer(WireMockRuntimeInfo wmRuntimeInfo) {
         var con = new NtfyConnectionImpl("http://localhost:" + wmRuntimeInfo.getHttpPort());
-        var model = new ChatModel(con);
         stubFor(post("/donne41").willReturn(ok()));
+        var model = new ChatModel(con);
 
-        model.sendMessage("Hello World");
+        var response=  model.sendMessage("Hello World");
         try {
-            Thread.sleep(200);
-        } catch (InterruptedException e) {
-            System.out.println("Thread sleep was interrupted");
+            System.out.println(response.get().statusCode());
+        }catch (Exception e){
+            System.out.println("Error sending from TestModel");
         }
-
         //verify
         verify(postRequestedFor(WireMock.urlEqualTo("/donne41"))
                 .withRequestBody(matching("Hello World")));
@@ -82,13 +80,13 @@ class ChatModelTest {
         var model = new ChatModel(con);
 
 
-        model.sendImage(tempImage);
+        var response = model.sendImage(tempImage);
 
 
         try {
-            Thread.sleep(400);
-        } catch (InterruptedException e) {
-            System.out.println("Thread sleep was interrupted");
+            response.get().statusCode();
+        } catch (Exception e) {
+            System.out.println("Error sending Image");
         }
         verify(postRequestedFor(WireMock.urlEqualTo("/donne41"))
                 .withRequestBody(binaryEqualTo(Files.readAllBytes(tempImage))));
@@ -97,8 +95,8 @@ class ChatModelTest {
     @Test
     void getTopicShouldReturnCurrentTopic(WireMockRuntimeInfo wmRuntimeInfo) {
         var con = new NtfyConnectionImpl("http://localhost:" + wmRuntimeInfo.getHttpPort(), "notDefault");
-        var model = new ChatModel(con);
         stubFor(get("/notDefault/json").willReturn(ok()));
+        var model = new ChatModel(con);
 
         model.getTopic();
 
@@ -108,15 +106,15 @@ class ChatModelTest {
     @Test
     void setNewTopicShouldReturnNewTopicFakeServer(WireMockRuntimeInfo wmRuntimeInfo) {
         var con = new NtfyConnectionImpl("http://localhost:" + wmRuntimeInfo.getHttpPort());
-        var model = new ChatModel(con);
         stubFor(post("/newTopic").willReturn(ok("changed topic")));
+        var model = new ChatModel(con);
 
         model.setNewTopic("newTopic");
-        model.sendMessage("test");
+        var response = model.sendMessage("test");
         try {
-            Thread.sleep(200);
-        } catch (InterruptedException e) {
-            System.out.println("Thread sleep was interrupted");
+            response.get().statusCode();
+        } catch (Exception e) {
+            System.out.println("Something went wrong");
         }
         //assertThat(model.getTopic()).isEqualTo("/newTopic");
         verify(postRequestedFor(WireMock.urlEqualTo("/newTopic"))

@@ -6,7 +6,9 @@ import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
+import java.net.http.HttpResponse;
 import java.nio.file.Path;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * Model layer: encapsulates application data and business logic.
@@ -50,13 +52,13 @@ public class ChatModel {
         }
     }
 
-    public void sendImage(Path file) {
-        connection.sendImage(file);
+    public CompletableFuture<HttpResponse<String>> sendImage(Path file) {
+        return connection.sendImage(file);
     }
 
 
-    public void sendMessage(String message) {
-        connection.send(message);
+    public CompletableFuture<HttpResponse<String>> sendMessage(String message) {
+        return connection.send(message);
     }
 
     public void receiveMessage() {
