@@ -62,6 +62,9 @@ public class NtfyConnectionImpl implements NtfyConnection {
         client.shutdownNow();
         newClient();
     }
+    public void shutDownClient(){
+        client.shutdownNow();
+    }
 
     public CompletableFuture<HttpResponse<String>> sendImage(Path file) {
         try {

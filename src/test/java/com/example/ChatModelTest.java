@@ -40,6 +40,7 @@ class ChatModelTest {
         model.sendMessage("Hello World");
         //assert    Then
         assertThat(spy.message).isEqualTo("Hello World");
+
     }
 
     @Test
@@ -48,15 +49,16 @@ class ChatModelTest {
         stubFor(post("/donne41").willReturn(ok()));
         var model = new ChatModel(con);
 
-        var response=  model.sendMessage("Hello World");
+        var response = model.sendMessage("Hello World");
         try {
             System.out.println(response.get().statusCode());
-        }catch (Exception e){
+        } catch (Exception e) {
             System.out.println("Error sending from TestModel");
         }
         //verify
         verify(postRequestedFor(WireMock.urlEqualTo("/donne41"))
                 .withRequestBody(matching("Hello World")));
+        con.shutDownClient();
     }
 
     @Test
@@ -89,6 +91,7 @@ class ChatModelTest {
         }
         verify(postRequestedFor(WireMock.urlEqualTo("/donne41"))
                 .withRequestBody(binaryEqualTo(Files.readAllBytes(tempImage))));
+        con.shutDownClient();
     }
 
     @Test
@@ -100,6 +103,7 @@ class ChatModelTest {
         model.getTopic();
 
         assertThat(model.getTopic()).isEqualTo("/notDefault");
+        con.shutDownClient();
     }
 
     @Test
@@ -118,6 +122,7 @@ class ChatModelTest {
         //assertThat(model.getTopic()).isEqualTo("/newTopic");
         verify(postRequestedFor(WireMock.urlEqualTo("/newTopic"))
                 .withRequestBody(matching("test")));
+        con.shutDownClient();
     }
 
     @Test
@@ -130,20 +135,18 @@ class ChatModelTest {
         var respons = model.sendMessage("OK");
         try {
             respons.get().statusCode();
-        }catch (Exception e){
-            System.out.println("Error sending test Text in topic"+ e.getMessage());
+        } catch (Exception e) {
+            System.out.println("Error sending test Text in topic" + e.getMessage());
         }
         String[] forbidden = {"!", "@", "#", "$", "¤", "%", "&", "(", ")", "=", "?", "*", "§", "½"};
         for (String symbol : forbidden) {
             String topic = "invalid" + symbol;
-            assertThrows(IllegalArgumentException.class, () -> {model.setNewTopic(topic);});
+            assertThrows(IllegalArgumentException.class, () -> {
+                model.setNewTopic(topic);
+            });
         }
-
-
-
+        con.shutDownClient();
 
     }
-
-
 
 }
