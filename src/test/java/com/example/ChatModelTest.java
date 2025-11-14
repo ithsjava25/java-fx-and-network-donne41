@@ -15,6 +15,7 @@ import java.nio.file.Path;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @WireMockTest
 class ChatModelTest {
@@ -135,9 +136,8 @@ class ChatModelTest {
         String[] forbidden = {"!", "@", "#", "$", "¤", "%", "&", "(", ")", "=", "?", "*", "§", "½"};
         for (String symbol : forbidden) {
             String topic = "invalid" + symbol;
-            model.setNewTopic(topic);
+            assertThrows(IllegalArgumentException.class, () -> {model.setNewTopic(topic);});
         }
-        //assertThat(model.getTopic()).isEqualTo("/validtopic");
 
 
 

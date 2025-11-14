@@ -16,6 +16,7 @@ import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.*;
 
+import javax.swing.*;
 import java.io.File;
 import java.net.URL;
 import java.time.Duration;
@@ -158,7 +159,11 @@ public class ChatController {
         chatRoomInput.setOnAction(e -> {
             String newTopic = chatRoomInput.getText();
             if (!newTopic.isEmpty()) {
-                model.setNewTopic(newTopic);
+                try {
+                    model.setNewTopic(newTopic);
+                }catch (IllegalArgumentException ex) {
+                    System.out.println(ex.getMessage());
+                }
             }
         });
         outgoingMessage.setOnMouseClicked(event -> {
@@ -331,12 +336,12 @@ public class ChatController {
         incImage.setFitWidth(720);
         AnchorPane imagePlace = new AnchorPane(incImage);
         if (isSent) {
-            TitledPane messageBox = new TitledPane("You sent file: " + attachmentName + (timeStamp.format(DateTimeFormatter.ofPattern("HH:mm:ss"))), imagePlace);
+            TitledPane messageBox = new TitledPane("You sent file: " + attachmentName + " " + (timeStamp.format(DateTimeFormatter.ofPattern("HH:mm:ss"))), imagePlace);
             msgContainer.getChildren().add(messageBox);
             presentImageSent(msgContainer);
 
         } else {
-            TitledPane messageBox = new TitledPane("You received file: " + attachmentName + (timeStamp.format(DateTimeFormatter.ofPattern("HH:mm:ss"))), imagePlace);
+            TitledPane messageBox = new TitledPane("You received file: " + attachmentName + " " + (timeStamp.format(DateTimeFormatter.ofPattern("HH:mm:ss"))), imagePlace);
             presentImageReceived(msgContainer);
             msgContainer.getChildren().add(messageBox);
 

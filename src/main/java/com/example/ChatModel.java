@@ -39,12 +39,14 @@ public class ChatModel {
         return newTopic;
     }
 
-    public void setNewTopic(String newTopic) {
+    public void setNewTopic(String newTopic) throws IllegalArgumentException {
         if (!newTopic.matches("^(?!/).*[\\s\\W]+.*")) {
             this.newTopic.set("Chat room: " + newTopic);
             connection.restartConnection();
             connection.setChatRoom(newTopic);
             receiveMessage();
+        } else {
+            throw new IllegalArgumentException("Using forbidden characters!");
         }
     }
 

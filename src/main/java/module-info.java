@@ -8,6 +8,7 @@ module hellofx {
     requires javafx.graphics;
     requires com.fasterxml.jackson.datatype.jsr310;
     requires com.fasterxml.jackson.databind;
+    requires java.desktop;
 
     opens com.example to javafx.fxml;
     exports com.example;
