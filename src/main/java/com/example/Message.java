@@ -15,11 +15,19 @@ public class Message {
     private String type;
 
 
+    /**
+     * Create a Message initialized with the provided message text.
+     *
+     * The constructor sets the instance's `message` field to the provided text.
+     * Other fields remain unset. The `sender` parameter is accepted but not used.
+     *
+     * @param message the message text to store in this Message
+     * @param sender  the sender identifier (currently ignored)
+     */
     public Message(String message, String sender) {
         this.message = message;
     }
 
 
 }
-
 
