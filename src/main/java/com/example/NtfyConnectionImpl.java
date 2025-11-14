@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import io.github.cdimascio.dotenv.Dotenv;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import javafx.application.Platform;
 
 
 import java.net.URI;
@@ -118,12 +119,21 @@ public class NtfyConnectionImpl implements NtfyConnection {
                                 })
                                 .filter(Objects::nonNull)
                                 .filter(message -> message.event().equals("message"))
-                                .forEach(messageHandler);
+                                .forEach(message -> runOnFx(()-> messageHandler.accept(message)));
                     } catch (Exception e) {
                         System.out.println("ERROR: " + e.getMessage());
                     }
                 });
 
+    }
+    private static void runOnFx(Runnable task) {
+        try {
+            if (Platform.isFxApplicationThread()) task.run();
+            else Platform.runLater(task);
+        } catch (IllegalStateException notInitialized) {
+            // JavaFX toolkit not initialized (e.g., unit tests): run inline
+            task.run();
+        }
     }
 
 }
