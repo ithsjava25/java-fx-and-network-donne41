@@ -11,12 +11,10 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
 import javafx.scene.layout.*;
-import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.*;
 
-import javax.swing.*;
 import java.io.File;
 import java.net.URL;
 import java.time.Duration;
@@ -44,8 +42,6 @@ public class ChatController {
     @FXML
     private Text currentTopic;
     @FXML
-    private Circle connectionStatus;
-    @FXML
     private ImageView settingsImage;
     @FXML
     private HBox topHbox;
@@ -67,9 +63,16 @@ public class ChatController {
         setupBackground();
         setTheme();
         setupListerners();
-        setupBindinger();
+        setupBindings();
     }
 
+    /**
+     * Applies the default background image to the root layout container.
+     * <p>
+     * This method loads the predefined background image resource
+     * ({@code /natureBackground.jpg}), creates a {@link BackgroundImage}
+     * with proportional scaling.
+     **/
     private void setupBackground() {
         Image startImage = new Image(getClass().getResource("/natureBackground.jpg").toExternalForm());
         backgroundSize = new BackgroundSize(
@@ -82,13 +85,21 @@ public class ChatController {
         root.setBackground(startBackground);
     }
 
+    /**
+     * Applies the image to the root layout container.
+     * @param image is proportional with {@link #backgroundSize} set in {@link #setupBackground()}
+     */
     private void setNewBackground(Image image) {
         backgroundImage = new BackgroundImage(image, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, backgroundSize);
         Background background = new Background(backgroundImage);
         root.setBackground(background);
     }
 
-    private void setupBindinger() {
+    /**
+     * Sets binding for message scrollPane to auto scroll when messages are more than screen size.
+     * Visual que for what chatRoom is currently connected to.
+     */
+    private void setupBindings() {
         messageArea.vvalueProperty().bind(messageList.heightProperty());
         currentTopic.textProperty().bind(model.newTopicProperty());
 
@@ -183,6 +194,10 @@ public class ChatController {
 
     }
 
+    /**
+     * Starts fileChooser to send image to {@link #setNewBackground(Image)}
+     * and sets that as new background.
+     */
     private void setBackgroundImage() {
         FileChooser chooser = new FileChooser();
         chooser.setTitle("Open Resource File");
@@ -195,6 +210,11 @@ public class ChatController {
         }
     }
 
+    /**
+     * Applies the default css to the root container.
+     * <p>
+     * sets the current css file in {@code /css/style.css} as stylesheet
+     */
     public void setTheme() {
         URL themeCss = getClass().getResource("/css/style.css");
         if (themeCss != null) {
@@ -202,6 +222,9 @@ public class ChatController {
         }
     }
 
+    /**
+     * Applies a new css file to the root container.
+     */
     public void changeTheme() {
         FileChooser chooser = new FileChooser();
         chooser.setTitle("Upload new Stylesheet");
@@ -219,9 +242,10 @@ public class ChatController {
 
 
     /**
-     * Send messenges. Suppost to be on the right side.
-     * Will not send if empty textfield.
-     *
+     * Send messages to NtfyConnection server.
+     * Will not send if empty text field.
+     *<p>
+     * Adds programs name in the beginning of the message to acknowledge who sent it.
      * @param actionEvent Enter button
      */
     public void enterButtonSend(ActionEvent actionEvent) {
@@ -230,26 +254,39 @@ public class ChatController {
             outgoingMessage.clear();
             return;
         }
-        if(text.equals("getTopic")){
-            System.out.println(model.getTopic());
-        }
         model.sendMessage("chatAholic: " + text);
         outgoingMessage.requestFocus();
 
     }
 
+    /**
+     * Applies the alignment of msgContainer to the right
+     * @param msgContainer from {@link #makeImageMessageBox}
+     */
     private void presentMessageSent(HBox msgContainer) {
         msgContainer.setAlignment(Pos.TOP_RIGHT);
         messageList.getChildren().add(msgContainer);
         outgoingMessage.clear();
     }
 
+    /**
+     * Applies the alignment of msgContainer to the left
+     * @param msgContainer from {@link #makeImageMessageBox}
+     */
     private void presentMessageReceived(HBox msgContainer) {
         msgContainer.setAlignment(Pos.TOP_LEFT);
         messageList.getChildren().add(msgContainer);
         outgoingMessage.clear();
     }
 
+    /**
+     * Presents messages by making new chatboxes from base of Borderpane.
+     * Messages are presented in the center of the borderPane while
+     * the sender and timestamp are presented in the topbox.
+     * @param message are set in the center.
+     * @param isSent ifSent is true program name is filtered out.
+     * @param timeStamp parsed as Locale of Europe/Stockholm.
+     */
     private void makeNewMessageBox(messageDTO message, boolean isSent, LocalDateTime timeStamp) {
         HBox msgContainer = new HBox();
         msgContainer.setId("msgContainer");
@@ -325,6 +362,12 @@ public class ChatController {
         messageList.getChildren().add(msgContainer);
     }
 
+    /**
+     * Present images by making new TiledPane
+     * @param message is default set to You sent or received file with file name.
+     * @param isSent is true sets the pane alignment to the right.
+     * @param timeStamp parsed as Locale of Europe/Stockholm.
+     */
     public void makeImageMessageBox(messageDTO message, boolean isSent, LocalDateTime timeStamp) {
         String messUrl = message.attachment().url().toString();
         String attachmentName = message.attachment().name();

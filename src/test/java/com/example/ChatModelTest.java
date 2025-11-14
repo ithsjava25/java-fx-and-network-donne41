@@ -12,6 +12,8 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.Instant;
+import java.time.LocalDateTime;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static org.assertj.core.api.Assertions.*;
@@ -59,6 +61,20 @@ class ChatModelTest {
         verify(postRequestedFor(WireMock.urlEqualTo("/donne41"))
                 .withRequestBody(matching("Hello World")));
         con.shutDownClient();
+    }
+    @Test
+    void getMessagesShouldBeEmptyWhenNoMessagesAreSent(WireMockRuntimeInfo wmRuntimeInfo) {
+        var con = new NtfyConnectionImpl("http://localhost:" + wmRuntimeInfo.getHttpPort());
+        stubFor(post("/donne41").willReturn(ok()));
+        var model = new ChatModel(con);
+
+        assertThat(model.getMessages()).isEmpty();
+        model.addMessage(new messageDTO("default", Instant.now(), "message",
+                "/donne41","default","default",null));
+        assertThat(model.getMessages().size()).isEqualTo(1);
+
+        con.shutDownClient();
+
     }
 
     @Test

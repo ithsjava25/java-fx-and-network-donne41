@@ -21,14 +21,16 @@ public class ChatModel {
 
 
     public ChatModel(NtfyConnection connection) {
-
         this.connection = connection;
         setNewTopic(getTopic());
-
     }
 
     public ObservableList<messageDTO> getMessages() {
         return messages;
+    }
+
+    public void addMessage(messageDTO message) {
+        messages.add(message);
     }
 
     public String getTopic() {
@@ -39,6 +41,11 @@ public class ChatModel {
         return newTopic;
     }
 
+    /**
+     * Set a new chatRoom in {@link NtfyConnectionImpl} and connects to it
+     * @param newTopic special characters and space are forbidden.
+     * @throws IllegalArgumentException is thrown when forbidden chars is in newTopic.
+     */
     public void setNewTopic(String newTopic) throws IllegalArgumentException {
         if (!newTopic.matches("^(?!/).*[\\s\\W]+.*")) {
             this.newTopic.set("Chat room: " + newTopic);

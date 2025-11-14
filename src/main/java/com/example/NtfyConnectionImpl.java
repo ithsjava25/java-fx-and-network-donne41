@@ -41,11 +41,16 @@ public class NtfyConnectionImpl implements NtfyConnection {
         newClient();
     }
 
+    /**
+     * Start a new HttpClient with mapper configuration and
+     * current hostName and chatRoom.
+     */
     public void newClient() {
         client = HttpClient.newHttpClient();
         mapper.registerModule(new JavaTimeModule());
         mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, true);
     }
+
 
     public void setChatRoom(String chatroom) {
         if (chatroom.matches("^/.*")) {
@@ -59,6 +64,9 @@ public class NtfyConnectionImpl implements NtfyConnection {
         return chatRoom;
     }
 
+    /**
+     * Kills current HttpClient and starts {@link #newClient()}
+     */
     public void restartConnection() {
         client.shutdownNow();
         newClient();
@@ -67,6 +75,12 @@ public class NtfyConnectionImpl implements NtfyConnection {
         client.shutdownNow();
     }
 
+    /**
+     * Builds a new httpRequest with current hostName and chatRoom.
+     * Messages are then sent to server asynchronously.
+     * @param file in for of Path are sent to the server.
+     * @return Server response as CompletableFuture.
+     */
     public CompletableFuture<HttpResponse<String>> sendImage(Path file) {
         try {
             HttpRequest httpRequest = HttpRequest.newBuilder()
@@ -80,6 +94,12 @@ public class NtfyConnectionImpl implements NtfyConnection {
         }
     }
 
+    /**
+     * Builds a new httpRequest with current hostName and chatRoom.
+     * Messages are then sent to server asynchronously.
+     * @param message of String to send.
+     * @return Server response as CompletableFuture.
+     */
     @Override
     public CompletableFuture<HttpResponse<String>> send(String message) {
         HttpRequest httpRequest = HttpRequest.newBuilder()
@@ -94,6 +114,11 @@ public class NtfyConnectionImpl implements NtfyConnection {
         return CompletableFuture.failedFuture(new Exception("unable to send message"));
     }
 
+    /**
+     * Builds a new httpRequest with current hostName and chatRoom.
+     * Then starts a long-poll request and processes incoming messages.
+     * @param messageHandler maps to messageDTO record
+     */
     @Override
     public void receive(Consumer<messageDTO> messageHandler) {
         HttpRequest httpRequest = HttpRequest.newBuilder()
@@ -108,7 +133,6 @@ public class NtfyConnectionImpl implements NtfyConnection {
 
                         response
                                 .body()
-                                .peek(System.out::println)
                                 .map(s -> {
                                     try {
                                         return mapper.readValue(s, messageDTO.class);
