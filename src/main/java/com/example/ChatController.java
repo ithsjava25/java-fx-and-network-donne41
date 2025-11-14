@@ -57,6 +57,12 @@ public class ChatController {
     BackgroundSize backgroundSize;
     LocalDateTime systemTimeSent = LocalDateTime.now();
 
+    /**
+     * Initializes the controller after FXML loading by configuring UI behavior and appearance.
+     *
+     * Performs setup of the settings button and its menu, applies the background image and CSS theme,
+     * and registers UI listeners and property bindings required for runtime interaction.
+     */
     @FXML
     private void initialize() {
         setupSettingsButton();
@@ -67,12 +73,11 @@ public class ChatController {
     }
 
     /**
-     * Applies the default background image to the root layout container.
-     * <p>
-     * This method loads the predefined background image resource
-     * ({@code /natureBackground.jpg}), creates a {@link BackgroundImage}
-     * with proportional scaling.
-     **/
+     * Set the controller's root background to the default nature image.
+     *
+     * Loads the bundled resource "/natureBackground.jpg" and applies it to the root
+     * container with proportional scaling and centered positioning.
+     */
     private void setupBackground() {
         Image startImage = new Image(getClass().getResource("/natureBackground.jpg").toExternalForm());
         backgroundSize = new BackgroundSize(
@@ -86,8 +91,9 @@ public class ChatController {
     }
 
     /**
-     * Applies the image to the root layout container.
-     * @param image is proportional with {@link #backgroundSize} set in {@link #setupBackground()}
+     * Sets the root layout's background to the provided image, scaled using the controller's backgroundSize.
+     *
+     * @param image the image to apply; it will be scaled proportionally using {@link #backgroundSize}
      */
     private void setNewBackground(Image image) {
         backgroundImage = new BackgroundImage(image, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, backgroundSize);
@@ -96,8 +102,10 @@ public class ChatController {
     }
 
     /**
-     * Sets binding for message scrollPane to auto scroll when messages are more than screen size.
-     * Visual que for what chatRoom is currently connected to.
+     * Keep the message view scrolled to the newest message and display the model's current chat topic.
+     *
+     * Binds the message area's vertical scroll value to the message list height to maintain automatic scrolling,
+     * and binds the topic label text to the model's new topic property.
      */
     private void setupBindings() {
         messageArea.vvalueProperty().bind(messageList.heightProperty());
@@ -106,6 +114,15 @@ public class ChatController {
     }
 
 
+    /**
+     * Configure the settings button to display a context menu for selecting background, theme,
+     * and entering a new chat room topic.
+     *
+     * <p>Initializes the controller fields {@code settingsBackground}, {@code settingsTheme}, and
+     * {@code chatRoomInput}, creates a ContextMenu containing those menu items (the chat room input
+     * is wrapped in a {@code CustomMenuItem}), and attaches a mouse-click handler that shows the
+     * menu at the click location and resets the chat room input text.</p>
+     */
     private void setupSettingsButton() {
         ContextMenu contextMenu = new ContextMenu();
         settingsBackground = new MenuItem("Background");
@@ -124,6 +141,16 @@ public class ChatController {
     }
 
 
+    /**
+     * Registers all UI and model listeners used by the controller.
+     *
+     * <p>Wires the message-listener to render newly added messages (text or image) into the chat view,
+     * deciding whether a message is presented as "sent" or "received" based on the message content
+     * (text prefix or presence of an attachment) and the elapsed time since the controller's last
+     * recorded outbound image send time. Also attaches listeners that validate and submit the chat-room
+     * topic, clear inputs on click, open background/theme pickers, and handle drag-and-drop and click
+     * image-send interactions for the outgoing message field.</p>
+     */
     private void setupListerners() {
         model.getMessages().addListener((ListChangeListener.Change<? extends messageDTO> c) -> {
             Platform.runLater(() -> {
@@ -195,8 +222,9 @@ public class ChatController {
     }
 
     /**
-     * Starts fileChooser to send image to {@link #setNewBackground(Image)}
-     * and sets that as new background.
+     * Opens a file chooser to select a JPG, PNG, or BMP image and sets the selected image as the UI background.
+     *
+     * If no file is selected, the background remains unchanged.
      */
     private void setBackgroundImage() {
         FileChooser chooser = new FileChooser();
@@ -211,9 +239,9 @@ public class ChatController {
     }
 
     /**
-     * Applies the default css to the root container.
-     * <p>
-     * sets the current css file in {@code /css/style.css} as stylesheet
+     * Apply the default stylesheet to the controller's root container.
+     *
+     * Loads the resource "/css/style.css" from the classpath and adds it to the root node's stylesheets if present.
      */
     public void setTheme() {
         URL themeCss = getClass().getResource("/css/style.css");
@@ -223,7 +251,10 @@ public class ChatController {
     }
 
     /**
-     * Applies a new css file to the root container.
+     * Opens a file chooser to select a CSS stylesheet and applies the chosen stylesheet to the root container.
+     *
+     * If a file is selected, existing stylesheets are cleared and the selected CSS is added to the root.
+     * If no file is selected, a message "No file selected" is printed to standard output.
      */
     public void changeTheme() {
         FileChooser chooser = new FileChooser();
@@ -242,11 +273,9 @@ public class ChatController {
 
 
     /**
-     * Send messages to NtfyConnection server.
-     * Will not send if empty text field.
-     *<p>
-     * Adds programs name in the beginning of the message to acknowledge who sent it.
-     * @param actionEvent Enter button
+     * Send the current text in the outgoing message field to the server with the "chatAholic" sender prefix.
+     *
+     * Trims whitespace and does nothing if the trimmed text is empty. After sending, refocuses the outgoing message field.
      */
     public void enterButtonSend(ActionEvent actionEvent) {
         String text = outgoingMessage.getText().trim();
@@ -260,8 +289,9 @@ public class ChatController {
     }
 
     /**
-     * Applies the alignment of msgContainer to the right
-     * @param msgContainer from {@link #makeImageMessageBox}
+     * Aligns a sent message container to the right, adds it to the message list, and clears the outgoing message input.
+     *
+     * @param msgContainer the HBox containing the message to present (will be aligned to the top-right and added to the message list)
      */
     private void presentMessageSent(HBox msgContainer) {
         msgContainer.setAlignment(Pos.TOP_RIGHT);
@@ -270,8 +300,9 @@ public class ChatController {
     }
 
     /**
-     * Applies the alignment of msgContainer to the left
-     * @param msgContainer from {@link #makeImageMessageBox}
+     * Aligns the given message container to the top-left, adds it to the chat message list, and clears the outgoing message field.
+     *
+     * @param msgContainer the message HBox to display in the chat message list
      */
     private void presentMessageReceived(HBox msgContainer) {
         msgContainer.setAlignment(Pos.TOP_LEFT);
@@ -280,12 +311,13 @@ public class ChatController {
     }
 
     /**
-     * Presents messages by making new chatboxes from base of Borderpane.
-     * Messages are presented in the center of the borderPane while
-     * the sender and timestamp are presented in the topbox.
-     * @param message are set in the center.
-     * @param isSent ifSent is true program name is filtered out.
-     * @param timeStamp parsed as Locale of Europe/Stockholm.
+     * Creates a chat message UI block and adds it to the message list, aligning sent messages to the right and received messages to the left.
+     *
+     * The message block displays the message text together with a sender label and a timestamp (formatted HH:mm:ss). When `isSent` is true the sender information is taken from the message payload; when false a generic "Web User" label is shown.
+     *
+     * @param message  DTO containing the message text and attachment metadata
+     * @param isSent   true if the message originated locally (affects alignment and sender label), false if received
+     * @param timeStamp  timestamp to display with the message (formatted as HH:mm:ss)
      */
     private void makeNewMessageBox(messageDTO message, boolean isSent, LocalDateTime timeStamp) {
         HBox msgContainer = new HBox();
@@ -322,6 +354,11 @@ public class ChatController {
 
     }
 
+    /**
+     * Sends the first dragged image or file to the model if the dragboard contains image data or files.
+     *
+     * @param event the DragEvent whose dragboard contains the dragged image or files; the event is consumed by this handler
+     */
     public void sendImageDropped(DragEvent event) {
         Dragboard dragboard = event.getDragboard();
         if (dragboard.hasImage() || dragboard.hasFiles()) {
@@ -336,6 +373,12 @@ public class ChatController {
     }
 
 
+    /**
+     * Opens a file chooser restricted to common image formats and, if the user selects a file,
+     * records the send time and sends the image via the model.
+     *
+     * If no file is selected the method returns without action.
+     */
     public void sendImage(ActionEvent actionEvent) {
         FileChooser chooser = new FileChooser();
         chooser.setTitle("Upload Image");
@@ -352,21 +395,37 @@ public class ChatController {
         }
     }
 
+    /**
+     * Adds an image message container to the chat and aligns it to the left.
+     *
+     * @param msgContainer the HBox containing the image message; it will be aligned to the top-left and appended to the message list
+     */
     public void presentImageReceived(HBox msgContainer) {
         msgContainer.setAlignment(Pos.TOP_LEFT);
         messageList.getChildren().add(msgContainer);
     }
 
+    /**
+     * Adds the given image message container to the chat message list aligned to the top-right.
+     *
+     * @param msgContainer the HBox containing the image message UI to present as sent by the local user
+     */
     public void presentImageSent(HBox msgContainer) {
         msgContainer.setAlignment(Pos.TOP_RIGHT);
         messageList.getChildren().add(msgContainer);
     }
 
     /**
-     * Present images by making new TiledPane
-     * @param message is default set to You sent or received file with file name.
-     * @param isSent is true sets the pane alignment to the right.
-     * @param timeStamp parsed as Locale of Europe/Stockholm.
+     * Display an image message in the chat with a timestamped title and appropriate alignment.
+     *
+     * The method extracts the attachment URL and name from the provided message, creates a titled
+     * image tile labeled with the attachment name and the given timestamp formatted as HH:mm:ss
+     * (Europe/Stockholm), and adds it to the message list aligned to the right for sent messages
+     * or to the left for received messages.
+     *
+     * @param message   the message DTO whose attachment provides the image URL and attachment name
+     * @param isSent    true to present the message as sent (right-aligned and labeled "You sent file"), false to present as received (left-aligned and labeled "You received file")
+     * @param timeStamp the timestamp to display in the title; formatted as "HH:mm:ss" in the Europe/Stockholm locale
      */
     public void makeImageMessageBox(messageDTO message, boolean isSent, LocalDateTime timeStamp) {
         String messUrl = message.attachment().url().toString();
