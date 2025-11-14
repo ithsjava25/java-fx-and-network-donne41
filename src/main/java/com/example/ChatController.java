@@ -4,6 +4,7 @@ import javafx.application.Platform;
 import javafx.collections.ListChangeListener;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -17,6 +18,10 @@ import javafx.stage.FileChooser.*;
 
 import java.io.File;
 import java.net.URL;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 
 /**
  * Controller layer: mediates between the view (FXML) and the model.
@@ -53,7 +58,7 @@ public class ChatController {
     MenuItem settingsTheme;
     TextField chatRoomInput;
     BackgroundSize backgroundSize;
-    long systemTimeSent = 0;
+    LocalDateTime systemTimeSent = LocalDateTime.now();
 
     @FXML
     private void initialize() {
@@ -113,18 +118,19 @@ public class ChatController {
                 while (c.next()) {
                     if (c.wasAdded()) {
                         var addedMessage = c.getAddedSubList().getFirst();
+                        var parsedTime = LocalDateTime.ofInstant(addedMessage.time(), ZoneId.of("Europe/Stockholm"));
+                        long secondsDiff = Math.abs(Duration.between(systemTimeSent, parsedTime).getSeconds());
                         if (addedMessage.attachment() != null) {
-                            if (addedMessage.time() - systemTimeSent < 4) {
-                                makeImageMessageBox(addedMessage, true);
+                                 if(secondsDiff < 4) {
+                                makeImageMessageBox(addedMessage, true, parsedTime);
                             } else {
-                                makeImageMessageBox(addedMessage, false);
-                                return;
+                                makeImageMessageBox(addedMessage, false, parsedTime);
                             }
                         } else {
                             if (addedMessage.message().matches("^chatAholic.*")) {
-                                makeNewMessageBox(addedMessage, true);
+                                makeNewMessageBox(addedMessage, true, parsedTime);
                             } else {
-                                makeNewMessageBox(addedMessage, false);
+                                makeNewMessageBox(addedMessage, false, parsedTime);
                             }
                         }
                     }
@@ -158,10 +164,7 @@ public class ChatController {
         outgoingMessage.setOnMouseClicked(event -> {
             outgoingMessage.clear();
         });
-        outgoingMessage.setOnDragDropped(event -> {
-            sendImageDropped(event);
-            System.out.println("DragDropp detected!");
-        });
+        outgoingMessage.setOnDragDropped(this::sendImageDropped);
         outgoingMessage.setOnDragOver(event -> {
             if (event.getGestureSource() != outgoingMessage && event.getDragboard().hasFiles()) {
                 boolean hasImage = event.getDragboard().getFiles().stream()
@@ -171,7 +174,6 @@ public class ChatController {
                 }
             }
             event.consume();
-            System.out.println("DragEntered detected!");
         });
 
     }
@@ -243,13 +245,15 @@ public class ChatController {
         outgoingMessage.clear();
     }
 
-    private void makeNewMessageBox(messageDTO message, boolean isSent) {
+    private void makeNewMessageBox(messageDTO message, boolean isSent, LocalDateTime timeStamp) {
         HBox msgContainer = new HBox();
         msgContainer.setId("msgContainer");
         BorderPane messageBox = new BorderPane();
         VBox messageContent = new VBox();
         messageBox.setCenter(messageContent);
-        HBox timeStampBox = new HBox(new VBox(message.time()));
+        HBox timeStampBox = new HBox(new Text((timeStamp.format(DateTimeFormatter.ofPattern("HH:mm:ss")))));
+        Region spacer = new Region();
+        spacer.setPadding(new Insets(2,2,2,2));
         HBox topBox = new HBox();
         topBox.setId("messageLabel");
         messageBox.setId("messageBox");
@@ -259,16 +263,16 @@ public class ChatController {
             String text = textMsg.substring(11);
             messageContent.getChildren().add(new Text(text));
             HBox senderTextBox = new HBox(new VBox(new Text(sender)));
-            topBox.getChildren().addAll(senderTextBox, timeStampBox);
-            HBox.setHgrow(timeStampBox, Priority.ALWAYS);
+            topBox.getChildren().addAll(senderTextBox, spacer, timeStampBox);
+            HBox.setHgrow(spacer, Priority.ALWAYS);
             messageBox.setTop(topBox);
             msgContainer.getChildren().add(messageBox);
             presentMessageSent(msgContainer);
         } else {
             messageContent.getChildren().add(new Text(message.message()));
             HBox senderTextBox = new HBox(new VBox(new Text("Web User: ")));
-            topBox.getChildren().addAll(timeStampBox, senderTextBox);
-            HBox.setHgrow(timeStampBox, Priority.ALWAYS);
+            topBox.getChildren().addAll(timeStampBox, spacer, senderTextBox);
+            HBox.setHgrow(spacer, Priority.ALWAYS);
             messageBox.setTop(topBox);
             msgContainer.getChildren().add(messageBox);
             presentMessageReceived(msgContainer);
@@ -281,7 +285,7 @@ public class ChatController {
         if (dragboard.hasImage() || dragboard.hasFiles()) {
             try {
                 model.sendImage(dragboard.getFiles().getFirst().toPath());
-                systemTimeSent = System.currentTimeMillis() / 1000;
+                systemTimeSent = LocalDateTime.now();
             } catch (Exception e) {
                 System.out.println("Error sending file: " + e.getMessage());
             }
@@ -300,8 +304,9 @@ public class ChatController {
         );
         File chosenFile = chooser.showOpenDialog(null);
         if (chosenFile != null) {
+            systemTimeSent = LocalDateTime.now();
             model.sendImage(chosenFile.toPath());
-            systemTimeSent = System.currentTimeMillis() / 1000;
+
         }
     }
 
@@ -315,7 +320,7 @@ public class ChatController {
         messageList.getChildren().add(msgContainer);
     }
 
-    public void makeImageMessageBox(messageDTO message, boolean isSent) {
+    public void makeImageMessageBox(messageDTO message, boolean isSent, LocalDateTime timeStamp) {
         String messUrl = message.attachment().url().toString();
         String attachmentName = message.attachment().name();
         HBox msgContainer = new HBox();
@@ -326,12 +331,12 @@ public class ChatController {
         incImage.setFitWidth(720);
         AnchorPane imagePlace = new AnchorPane(incImage);
         if (isSent) {
-            TitledPane messageBox = new TitledPane("You sent file: " + attachmentName, imagePlace);
+            TitledPane messageBox = new TitledPane("You sent file: " + attachmentName + (timeStamp.format(DateTimeFormatter.ofPattern("HH:mm:ss"))), imagePlace);
             msgContainer.getChildren().add(messageBox);
             presentImageSent(msgContainer);
 
         } else {
-            TitledPane messageBox = new TitledPane("You received file: " + attachmentName, imagePlace);
+            TitledPane messageBox = new TitledPane("You received file: " + attachmentName + (timeStamp.format(DateTimeFormatter.ofPattern("HH:mm:ss"))), imagePlace);
             presentImageReceived(msgContainer);
             msgContainer.getChildren().add(messageBox);
 

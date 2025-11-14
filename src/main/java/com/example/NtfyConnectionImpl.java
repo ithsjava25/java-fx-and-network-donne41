@@ -1,7 +1,10 @@
 package com.example;
 
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import io.github.cdimascio.dotenv.Dotenv;
-import tools.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -39,6 +42,8 @@ public class NtfyConnectionImpl implements NtfyConnection {
 
     public void newClient() {
         client = HttpClient.newHttpClient();
+        mapper.registerModule(new JavaTimeModule());
+        mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, true);
     }
 
     public void setChatRoom(String chatroom) {
@@ -104,6 +109,7 @@ public class NtfyConnectionImpl implements NtfyConnection {
                                     try {
                                         return mapper.readValue(s, messageDTO.class);
                                     } catch (Exception e) {
+                                        System.out.println("Error parsing: "  + e.getMessage());
                                         return null;
                                     }
                                 })
