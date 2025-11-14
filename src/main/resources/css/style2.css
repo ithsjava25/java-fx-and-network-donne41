@@ -1,0 +1,23 @@
+.root {
+    -fx-background-color: red;
+}
+
+.label {
+    -fx-font-style: bold;
+}
+.scroll-pane{
+    -fx-background-color: transparent;
+}
+.viewport{
+    -fx-background-color: transparent;
+}
+#messageList{
+    -fx-tile-alignment: center;
+}
+
+#messagetextId{
+    -fx-background-color: lightblue;
+    -fx-background-radius: 5px;
+    -fx-font-size: 14px;
+    -fx-opacity: 0.8;
+}

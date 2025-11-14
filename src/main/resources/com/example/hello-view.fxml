@@ -1,9 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?import javafx.scene.layout.StackPane?>
-<?import javafx.scene.control.Label?>
 
-<StackPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.HelloController">
-    <children>
-        <Label fx:id="messageLabel" text="Hello, JavaFX!" />
-    </children>
-</StackPane>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.text.*?>
+
+<BorderPane fx:id="root" prefHeight="391.0" prefWidth="388.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.ChatController">
+    <top>
+        <HBox fx:id="topHbox" styleClass="topHbox">
+            <Text fx:id="currentTopic" />
+        <Region fx:id="spacerTopBox" HBox.hgrow="SOMETIMES" />
+            <Button fx:id="settingsButton" />
+        </HBox>
+    </top>
+    <center>
+        <ScrollPane fx:id="messageArea" fitToHeight="true" fitToWidth="true">
+            <VBox fx:id="messageList" alignment="TOP_CENTER" spacing="1">
+            </VBox>
+        </ScrollPane>
+    </center>
+    <bottom>
+        <HBox>
+            <Button fx:id="sendImage" styleClass="sendButton" onAction="#sendImage" />
+            <TextField fx:id="outgoingMessage" onAction="#enterButtonSend" onDragDropped="#sendImageDropped" text="Send a message" HBox.hgrow="SOMETIMES" />
+            <Button fx:id="sendButton" styleClass="sendButton" onAction="#enterButtonSend" text="Send" />
+        </HBox>
+    </bottom>
+</BorderPane>
